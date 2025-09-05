@@ -1,0 +1,34 @@
+# Archivos de compilación y dependencias
+bin/
+obj/
+
+# Configuración de usuario y entorno
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+.idea/
+
+# Archivos de logs y temporales
+*.log
+*.tmp
+
+# Archivos de configuración local
+*.env
+.env.*
+
+# Paquetes NuGet
+*.nupkg
+*.snupkg
+packages/
+
+
+
+# Archivos del sistema
+*.DS_Store
+Thumbs.db
+
+# Otros
+FarmGuard-Backend/Properties/launchSettings.json
+
