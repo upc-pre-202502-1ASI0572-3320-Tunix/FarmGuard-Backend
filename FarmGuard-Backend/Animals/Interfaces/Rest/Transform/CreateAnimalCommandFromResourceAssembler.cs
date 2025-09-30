@@ -15,6 +15,8 @@ public class CreateAnimalCommandFromResourceAssembler
             resource.location, 
             resource.hearRate, 
             resource.temperature,
-            idInventory);
+            idInventory,
+            resource.sex,
+            resource.birthDate);
     }
 }

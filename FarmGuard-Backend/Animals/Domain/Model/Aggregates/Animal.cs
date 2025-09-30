@@ -11,10 +11,12 @@ public class Animal
         string specie, 
         string urlIot, 
         string urlPhoto, 
-        string location, 
+        string location,
         long hearRate,
         long temperature,
-        int inventoryId)
+        int sectionId,
+        bool sex,
+        DateTime birthDate)
     {
         Name = name;
         SerialNumber = new SerialNumberAnimal();
@@ -31,19 +33,30 @@ public class Animal
         HearRate = hearRate;
         Temperature = temperature;
         
-        InventoryId= inventoryId;
+        SectionId= sectionId;
+        Sex = sex;
+        BirthDate = birthDate;
     }
     public int Id { get; }
     public SerialNumberAnimal SerialNumber { get; private set; }
     public string Name { get; private set; }
     public ESpecie Specie { get; private set; }
+    
+    public bool Sex { get; private set; }
+    public DateTime BirthDate { get; private set; }
+    
+    /*Inventario*/
+    public Section section { get; private set; }
+    public int SectionId { get; private set; }
+    
+    
     /*Vacunas*/
     public ICollection<Vaccine> Vaccines { get; private set; }
     public string UrlIot { get; private set; }
     public string UrlPhoto { get; private set; }
-    /*Inventario*/
-    public Section section { get; private set; }
-    public int InventoryId { get; private set; }
+    
+    
+    
     public string Location { get; private set; }
     public long HearRate { get; private set; }
     public long Temperature { get; private set; }

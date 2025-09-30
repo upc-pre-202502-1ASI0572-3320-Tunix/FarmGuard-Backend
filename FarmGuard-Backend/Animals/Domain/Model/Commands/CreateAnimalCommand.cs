@@ -8,5 +8,7 @@ public record CreateAnimalCommand(
     string location, 
     long hearRate,
     long temperature,
-    int inventoryId
+    int inventoryId,
+    bool sex,
+    DateTime birthDate
     );

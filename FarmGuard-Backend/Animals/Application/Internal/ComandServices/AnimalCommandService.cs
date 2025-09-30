@@ -37,7 +37,10 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
                 urlPhoto, 
                 command.location,
                 command.hearRate, 
-                command.temperature,inventory.Id);
+                command.temperature,
+                inventory.Id,
+                command.sex,
+                command.birthDate);
             
             
             /*Aca se guarda en db por transaccion*/
@@ -73,7 +76,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             //Creamos variables para pasar
 
             var tittle = $"Notification of {animal.Name}";
-            var inventoryId = animal.InventoryId;
+            var inventoryId = animal.SectionId;
 
             if (controlTemperature)
             {
@@ -125,7 +128,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
     public async Task<Animal?> Handle(DeleteAnimalByIdAnimalCommand command)
     {
         var animal = await animalRepository.FindAnimalBySerialNumberIdAsync(command.AnimalId);
-        if (animal is null) throw new Exception("No se encontro animal con Cierta Id Animal");
+        if (animal is null) throw new Exception("No se encontro animal con Certa Id Animal");
         
         animalRepository.Remove(animal);
         await unitOfWork.CompleteAsync();

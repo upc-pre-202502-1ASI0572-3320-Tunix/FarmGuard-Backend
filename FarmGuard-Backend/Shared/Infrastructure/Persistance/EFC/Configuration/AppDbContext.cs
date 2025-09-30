@@ -84,7 +84,7 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         builder.Entity<Section>()
             .HasMany(i => i.Animals)
             .WithOne(a => a.section)
-            .HasForeignKey(a => a.InventoryId)
+            .HasForeignKey(a => a.SectionId)
             .HasPrincipalKey(i => i.Id);
 
         builder.Entity<Profile>()

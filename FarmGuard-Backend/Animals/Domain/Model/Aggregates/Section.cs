@@ -12,6 +12,7 @@ public class Section
     public Section(string name,int idProfile)
     {
         Name = name;
+        
         Animals = new List<Animal>();
         ProfileId = idProfile;
         Notifications = new List<Notification>();
