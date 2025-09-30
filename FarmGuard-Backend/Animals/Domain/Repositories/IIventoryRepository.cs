@@ -3,7 +3,7 @@ using FarmGuard_Backend.Shared.Domain.Repositories;
 
 namespace FarmGuard_Backend.Animals.Domain.Repositories;
 
-public interface IIventoryRepository:IBaseRepository<Inventory>
+public interface IIventoryRepository:IBaseRepository<Section>
 {
     
 }

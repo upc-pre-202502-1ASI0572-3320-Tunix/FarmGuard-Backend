@@ -29,7 +29,7 @@ namespace FarmGuard_Backend.Notifications.Domain.Model.Aggregates
         
         public int InventoryId { get; private set; }
         
-        public Inventory Inventory { get; private set; }
+        public Section section { get; private set; }
         
         public EState ConvertStringToEnum(string state)
         {

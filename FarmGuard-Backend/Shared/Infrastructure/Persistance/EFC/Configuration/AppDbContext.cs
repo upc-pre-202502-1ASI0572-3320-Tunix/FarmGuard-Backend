@@ -41,9 +41,9 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         builder.Entity<Animal>().Property(p => p.Temperature).IsRequired().HasColumnType("decimal(18,2)");
         builder.Entity<Animal>().Property(p => p.HearRate).IsRequired().HasColumnType("decimal(18,2)");
         
-        builder.Entity<Inventory>().HasKey(i=>i.Id);
-        builder.Entity<Inventory>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<Inventory>().Property(i => i.Name).IsRequired();
+        builder.Entity<Section>().HasKey(i=>i.Id);
+        builder.Entity<Section>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Section>().Property(i => i.Name).IsRequired();
         
         
         
@@ -81,28 +81,28 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
             .HasForeignKey(v => v.AnimalId)
             .HasPrincipalKey(a => a.Id);
 
-        builder.Entity<Inventory>()
+        builder.Entity<Section>()
             .HasMany(i => i.Animals)
-            .WithOne(a => a.Inventory)
+            .WithOne(a => a.section)
             .HasForeignKey(a => a.InventoryId)
             .HasPrincipalKey(i => i.Id);
 
         builder.Entity<Profile>()
-            .HasOne(p => p.Inventory)
+            .HasOne(p => p.section)
             .WithOne(i =>i.Profile)
             .HasForeignKey<Profile>(p => p.InventoryId)
             .OnDelete(DeleteBehavior.Cascade);;
             
 
-        builder.Entity<Inventory>()
+        builder.Entity<Section>()
             .HasOne(i => i.Profile)
-            .WithOne(p => p.Inventory)
-            .HasForeignKey<Inventory>(i=>i.ProfileId)
+            .WithOne(p => p.section)
+            .HasForeignKey<Section>(i=>i.ProfileId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<Inventory>()
+        builder.Entity<Section>()
             .HasMany(i => i.Notifications)
-            .WithOne(n => n.Inventory)
+            .WithOne(n => n.section)
             .HasForeignKey(n => n.InventoryId)
             .HasPrincipalKey(i => i.Id);
 

@@ -3,7 +3,7 @@ using FarmGuard_Backend.Animals.Domain.Model.Commands;
 
 namespace FarmGuard_Backend.Animals.Domain.Services;
 
-public interface IInventoryCommandService
+public interface ISectionCommandService
 {
-    Task<Inventory?> Handle(CreateInventoryCommand command);
+    Task<Section?> Handle(CreateInventoryCommand command);
 }

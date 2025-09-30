@@ -143,9 +143,9 @@ builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
 builder.Services.AddScoped<IAnimalCommandService, AnimalCommandService>();
 builder.Services.AddScoped<IAnimalQueryService, AnimalQueryService>();
 
-builder.Services.AddScoped<IIventoryRepository, InventoryRepository>();
-builder.Services.AddScoped<IInventoryCommandService, InventoryCommandService>();
-builder.Services.AddScoped<IInventoryQueryService, InventoryQueryService>();
+builder.Services.AddScoped<IIventoryRepository, SectionRepository>();
+builder.Services.AddScoped<ISectionCommandService, SectionCommandService>();
+builder.Services.AddScoped<ISectionQueryService, SectionQueryService>();
 
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
@@ -168,7 +168,7 @@ builder.Services.AddScoped<INotificationQuerieService, NotificationQueryService>
 builder.Services.AddScoped<IAnimalContextFacade, AnimalContextFacade>();
 builder.Services.AddScoped<ExternalAnimalService>();
 
-builder.Services.AddScoped<IInventoryContextFacade, InventoryContextFacade>();
+builder.Services.AddScoped<IInventoryContextFacade, SectionContextFacade>();
 builder.Services.AddScoped<ExternalInventoryService>();
 
 builder.Services.AddScoped<INotificationContextFacade, NotificationContextFacade>();

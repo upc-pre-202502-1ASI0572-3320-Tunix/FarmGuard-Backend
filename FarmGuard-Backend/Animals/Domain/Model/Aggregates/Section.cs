@@ -3,13 +3,13 @@ using FarmGuard_Backend.profile.Domain.Model.Aggregate;
 
 namespace FarmGuard_Backend.Animals.Domain.Model.Aggregates;
 
-public class Inventory
+public class Section
 {
-    public Inventory()
+    public Section()
     {
         
     }
-    public Inventory(string name,int idProfile)
+    public Section(string name,int idProfile)
     {
         Name = name;
         Animals = new List<Animal>();

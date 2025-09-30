@@ -6,9 +6,9 @@ using FarmGuard_Backend.Shared.Domain.Repositories;
 
 namespace FarmGuard_Backend.Animals.Application.Internal.QueryServices;
 
-public class InventoryQueryService(IIventoryRepository iventoryRepository,IUnitOfWork unitOfWork):IInventoryQueryService
+public class SectionQueryService(IIventoryRepository iventoryRepository,IUnitOfWork unitOfWork):ISectionQueryService
 {
-    public Task<Inventory?> Handle(GetInventoryByIdQueries query)
+    public Task<Section?> Handle(GetInventoryByIdQueries query)
     {
         return iventoryRepository.FindByIdAsync(query.idInventory);
     }

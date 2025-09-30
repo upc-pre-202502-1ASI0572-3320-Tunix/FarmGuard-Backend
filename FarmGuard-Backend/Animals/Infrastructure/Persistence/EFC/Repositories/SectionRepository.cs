@@ -6,7 +6,7 @@ using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Repositories;
 
 namespace FarmGuard_Backend.Animals.Infrastructure.Persistence.EFC.Repositories;
 
-public class InventoryRepository(AppDbContext context):BaseRepository<Inventory>(context),IIventoryRepository
+public class SectionRepository(AppDbContext context):BaseRepository<Section>(context),IIventoryRepository
 {
     
 }

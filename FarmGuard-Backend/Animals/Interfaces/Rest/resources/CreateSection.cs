@@ -1,3 +1,3 @@
 namespace FarmGuard_Backend.Animals.Interfaces.Rest.resources;
 
-public record CreateInventory(string Name,int ProfileId);
+public record CreateSection(string Name,int ProfileId);

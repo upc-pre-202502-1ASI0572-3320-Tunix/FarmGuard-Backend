@@ -10,15 +10,15 @@ namespace FarmGuard_Backend.Animals.Interfaces.Rest;
 
 [ApiController]
 [Route("api/v1/inventory")]
-public class InventoryController(IInventoryCommandService inventoryCommandService,IInventoryQueryService inventoryQueryService):ControllerBase
+public class SectionController(ISectionCommandService sectionCommandService,ISectionQueryService sectionQueryService):ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult> CreateInventory([FromBody] CreateInventory resource)
+    public async Task<ActionResult> CreateInventory([FromBody] CreateSection resource)
     {
         try
         {
             var createInventoryCommand = new CreateInventoryCommand(resource.Name, resource.ProfileId);
-            var inventory = await inventoryCommandService.Handle(createInventoryCommand);
+            var inventory = await sectionCommandService.Handle(createInventoryCommand);
             if (inventory == null) return BadRequest("Inventory is null");
             return Ok(inventory);
 
@@ -36,7 +36,7 @@ public class InventoryController(IInventoryCommandService inventoryCommandServic
         try
         {
             var getInventoryByIdQuery = new GetInventoryByIdQueries(id);
-            var inventory = await inventoryQueryService.Handle(getInventoryByIdQuery);
+            var inventory = await sectionQueryService.Handle(getInventoryByIdQuery);
             if (inventory == null) return BadRequest($"Inventory not found with id: {id}");
             
             var resource = InventoryResourceFromEntityAssembler.ToEntityFromResource(inventory);

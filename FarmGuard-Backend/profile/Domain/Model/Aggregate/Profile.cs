@@ -39,7 +39,7 @@ public partial class Profile
 
     public string FullName => Name.FullName;
     
-    public Inventory Inventory {get; private set;}
+    public Section section {get; private set;}
     public int InventoryId { get; private set; }
     
     public int UserId { get; private set; }

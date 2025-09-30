@@ -5,8 +5,8 @@ namespace FarmGuard_Backend.Animals.Interfaces.Rest.Transform;
 
 public class InventoryResourceFromEntityAssembler
 {
-    public static InventoryResource ToEntityFromResource(Inventory entity)
+    public static SectionResource ToEntityFromResource(Section entity)
     {
-        return new InventoryResource(entity.Id,entity.Name, entity.ProfileId);
+        return new SectionResource(entity.Id,entity.Name, entity.ProfileId);
     }
 }

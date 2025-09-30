@@ -3,7 +3,7 @@ using FarmGuard_Backend.Animals.Domain.Model.Queries;
 
 namespace FarmGuard_Backend.Animals.Domain.Services;
 
-public interface IInventoryQueryService
+public interface ISectionQueryService
 {
-    Task<Inventory?> Handle(GetInventoryByIdQueries query);
+    Task<Section?> Handle(GetInventoryByIdQueries query);
 }

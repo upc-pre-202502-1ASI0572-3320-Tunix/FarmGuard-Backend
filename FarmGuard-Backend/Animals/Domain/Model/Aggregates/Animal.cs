@@ -42,7 +42,7 @@ public class Animal
     public string UrlIot { get; private set; }
     public string UrlPhoto { get; private set; }
     /*Inventario*/
-    public Inventory Inventory { get; private set; }
+    public Section section { get; private set; }
     public int InventoryId { get; private set; }
     public string Location { get; private set; }
     public long HearRate { get; private set; }
