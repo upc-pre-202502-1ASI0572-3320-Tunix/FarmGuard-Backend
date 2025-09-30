@@ -11,7 +11,7 @@ public class CreateAnimalCommandFromResourceAssembler
             resource.name, 
             resource.specie,
             resource.urlIot, 
-            resource.urlPhoto,
+            resource.file,
             resource.location, 
             resource.hearRate, 
             resource.temperature,

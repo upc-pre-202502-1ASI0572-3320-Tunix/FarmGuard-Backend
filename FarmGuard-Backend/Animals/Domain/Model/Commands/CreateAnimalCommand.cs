@@ -4,7 +4,7 @@ public record CreateAnimalCommand(
     string name, 
     string specie, 
     string urlIot, 
-    string urlPhoto, 
+    IFormFile? Photo, 
     string location, 
     long hearRate,
     long temperature,

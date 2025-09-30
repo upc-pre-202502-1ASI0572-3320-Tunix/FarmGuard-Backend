@@ -4,6 +4,7 @@ using FarmGuard_Backend.Animals.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Animals.Application.Internal.QueryServices;
 using FarmGuard_Backend.Animals.Domain.Repositories;
 using FarmGuard_Backend.Animals.Domain.Services;
+using FarmGuard_Backend.Animals.Infrastructure.FireBase;
 using FarmGuard_Backend.Animals.Infrastructure.Persistence.EFC.Repositories;
 using FarmGuard_Backend.Animals.Interfaces.Acl;
 using FarmGuard_Backend.Animals.Interfaces.Acl.Services;
@@ -146,6 +147,8 @@ builder.Services.AddScoped<IAnimalQueryService, AnimalQueryService>();
 builder.Services.AddScoped<IIventoryRepository, SectionRepository>();
 builder.Services.AddScoped<ISectionCommandService, SectionCommandService>();
 builder.Services.AddScoped<ISectionQueryService, SectionQueryService>();
+
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();

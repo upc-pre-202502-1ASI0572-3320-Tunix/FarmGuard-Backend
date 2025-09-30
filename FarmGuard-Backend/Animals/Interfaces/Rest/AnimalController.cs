@@ -14,7 +14,8 @@ namespace FarmGuard_Backend.Animals.Interfaces.Rest;
 public class AnimalController(IAnimalCommandService animalCommandService, IAnimalQueryService animalQueryService):ControllerBase
 {
     [HttpPost("{idInventory}")]
-    public async Task<IActionResult> CreateAnimal([FromBody] CreateAnimalResource resource, int idInventory)
+    [RequestFormLimits(MultipartBodyLengthLimit = 5_000_000)]
+    public async Task<IActionResult> CreateAnimal([FromForm] CreateAnimalResource resource, int idInventory)
     {
         try
         {

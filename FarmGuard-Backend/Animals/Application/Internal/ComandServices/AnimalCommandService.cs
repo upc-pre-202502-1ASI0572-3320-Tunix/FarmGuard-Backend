@@ -11,7 +11,9 @@ namespace FarmGuard_Backend.Animals.Application.Internal.ComandServices;
 public class AnimalCommandService(IAnimalRepository animalRepository,
     IUnitOfWork unitOfWork,
     ExternalNotificationService externalNotificationService,
+    IStorageService storageService,
     IIventoryRepository inIventoryRepository):IAnimalCommandService
+    
 {
     public async Task<Animal?> Handle(CreateAnimalCommand command)
     {
@@ -20,13 +22,19 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             /*Aca iria las reglas del negocio*/
             var inventory = await inIventoryRepository.FindByIdAsync(command.inventoryId);
             if (inventory is null) throw new Exception("Inventory not found");
+            if (command.Photo is null) throw new ArgumentNullException(nameof(command.Photo), "Photo cannot be null");
+            if (command.Photo.Length > 5_000_000) // 5 MB
+                throw new InvalidOperationException("El archivo excede el tamaño máximo permitido (5 MB).");
+            
+            //Guardar imagen en el servicio de almacenamiento
+            var urlPhoto = await storageService.SaveFile(command.Photo,inventory.Id);
             
             /*Aqui se crea la la entidad animal*/
             var animal = new Animal(
                 command.name, 
                 command.specie, 
                 command.urlIot, 
-                command.urlPhoto, 
+                urlPhoto, 
                 command.location,
                 command.hearRate, 
                 command.temperature,inventory.Id);
