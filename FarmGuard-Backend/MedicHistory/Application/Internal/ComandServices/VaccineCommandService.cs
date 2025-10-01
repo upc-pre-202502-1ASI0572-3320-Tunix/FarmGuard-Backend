@@ -14,18 +14,14 @@ public class VaccineCommandService(IVaccineRepository vaccineRepository,IUnitOfW
     {
         try
         {
-            
-            var idAnimal = await externalAnimalService.GetAnimalByAnimalId(command.SerialAnimalId);
-            
-            if(idAnimal is null) throw new Exception("Animal not Found");
-            
-            var vaccine = new Vaccine(command.name, command.description, command.date, idAnimal.Value);
-            
+            var vaccine = new Vaccine(
+                command.name,
+                command.manufacturer,
+                command.schema,
+                command.medicalHistoryId
+            );
             await vaccineRepository.AddAsync(vaccine);
-            
-            
             await unitOfWork.CompleteAsync();
-            
             return vaccine;
         }
         catch (Exception e)

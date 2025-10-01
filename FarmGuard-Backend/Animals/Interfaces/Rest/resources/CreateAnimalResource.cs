@@ -4,8 +4,10 @@ public record CreateAnimalResource(
     string name,
     string specie,
     string urlIot,
-    string urlPhoto,
+    IFormFile? file,
     string location,
     long hearRate,
-    long temperature
+    long temperature,
+    bool sex,
+    DateTime birthDate
     );

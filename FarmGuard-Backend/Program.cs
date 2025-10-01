@@ -4,6 +4,7 @@ using FarmGuard_Backend.Animals.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Animals.Application.Internal.QueryServices;
 using FarmGuard_Backend.Animals.Domain.Repositories;
 using FarmGuard_Backend.Animals.Domain.Services;
+using FarmGuard_Backend.Animals.Infrastructure.FireBase;
 using FarmGuard_Backend.Animals.Infrastructure.Persistence.EFC.Repositories;
 using FarmGuard_Backend.Animals.Interfaces.Acl;
 using FarmGuard_Backend.Animals.Interfaces.Acl.Services;
@@ -147,10 +148,32 @@ builder.Services.AddScoped<IIventoryRepository, SectionRepository>();
 builder.Services.AddScoped<ISectionCommandService, SectionCommandService>();
 builder.Services.AddScoped<ISectionQueryService, SectionQueryService>();
 
+builder.Services.AddScoped<IStorageService, StorageService>();
+
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
 builder.Services.AddScoped<IVaccineCommandService, VaccineCommandService>();
 builder.Services.AddScoped<IVaccineQueryService,VaccineQueryService>();
+
+builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
+builder.Services.AddScoped<IMedicationCommandService, MedicationCommandService>();
+builder.Services.AddScoped<IMedicationQueryService, MedicationQueryService>();
+
+builder.Services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
+builder.Services.AddScoped<IMedicalHistoryCommandService, MedicalHistoryCommandService>();
+builder.Services.AddScoped<IMedicalHistoryQueryService, MedicalHistoryQueryService>();
+
+builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
+builder.Services.AddScoped<ITreatmentCommandService, TreatmentCommandService>();
+builder.Services.AddScoped<ITreatmentQueryService, TreatmentQueryService>();
+
+builder.Services.AddScoped<IDiseaseRepository,DiseaseRepository>();
+builder.Services.AddScoped<IDiseaseCommandService,DiseaseCommandService>();
+builder.Services.AddScoped<IDiseaseQueryService,DiseaseQueryService>();
+
+builder.Services.AddScoped<IDiseaseDiagnosisRepository,DiseaseDiagnosisRepository>();
+builder.Services.AddScoped<IDiseaseDiagnosisCommandService,DiseaseDiagnosisCommandService>();
+builder.Services.AddScoped<IDiseaseDiagnosisQueryService,DiseaseDiagnosisQueryService>();
 
 //----------------Profile BoundedContext---------------------
 builder.Services.AddScoped<IProfileRepository,ProfileRepository>();

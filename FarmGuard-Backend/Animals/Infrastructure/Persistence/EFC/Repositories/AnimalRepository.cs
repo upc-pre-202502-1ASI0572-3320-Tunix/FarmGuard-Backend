@@ -19,7 +19,7 @@ public class AnimalRepository(AppDbContext context):BaseRepository<Animal>(conte
     public async Task<IEnumerable<Animal>> FindAnimalsByIdInventory(int idInventory)
     {
         return await Context.Set<Animal>()
-            .Where(a => a.InventoryId == idInventory)
+            .Where(a => a.SectionId == idInventory)
             .ToListAsync();
     }
 
