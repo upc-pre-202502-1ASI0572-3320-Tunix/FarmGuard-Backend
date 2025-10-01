@@ -40,7 +40,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
                 command.temperature,
                 inventory.Id,
                 command.sex,
-                command.birthDate);
+                command.birthDate,1);
             
             
             /*Aca se guarda en db por transaccion*/

@@ -1,10 +1,36 @@
 using FarmGuard_Backend.Animals.Domain.Model.ValueObjects;
+using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Model.Entities;
 
 namespace FarmGuard_Backend.Animals.Domain.Model.Aggregates;
 
 public class Animal
 {
+    public int Id { get; }
+    public SerialNumberAnimal SerialNumber { get; private set; }
+    public string Name { get; private set; }
+    public ESpecie Specie { get; private set; }
+    public bool Sex { get; private set; }
+    public DateTime BirthDate { get; private set; }
+    
+    public string urlIot { get; private set; }
+    public string urlPhoto { get; private set; }
+    
+    /*Inventario*/
+    public Section section { get; private set; }
+    public int SectionId { get; private set; }
+    
+    
+    /*Vacunas*/
+    public MedicalHistory medicalHistory { get; private set; }
+    public int MedicalHistoryId { get; private set; }
+
+    
+    
+    public string Location { get; private set; }
+    public long HearRate { get; private set; }
+    public long Temperature { get; private set; }
+    
     public Animal(){}
     public Animal(
         string name, 
@@ -16,7 +42,8 @@ public class Animal
         long temperature,
         int sectionId,
         bool sex,
-        DateTime birthDate)
+        DateTime birthDate,
+        int medicalHistoryId)
     {
         Name = name;
         SerialNumber = new SerialNumberAnimal();
@@ -24,10 +51,10 @@ public class Animal
         //Funcion para convertir en Enum
         Specie = ConvertStringToEnum(specie);
 
-        UrlIot = urlIot;
-        UrlPhoto = urlPhoto;
+        this.urlIot = urlIot;
+        this.urlPhoto = urlPhoto;
 
-        Vaccines = new List<Vaccine>();
+        MedicalHistoryId = medicalHistoryId;
         
         Location = location;
         HearRate = hearRate;
@@ -37,29 +64,7 @@ public class Animal
         Sex = sex;
         BirthDate = birthDate;
     }
-    public int Id { get; }
-    public SerialNumberAnimal SerialNumber { get; private set; }
-    public string Name { get; private set; }
-    public ESpecie Specie { get; private set; }
     
-    public bool Sex { get; private set; }
-    public DateTime BirthDate { get; private set; }
-    
-    /*Inventario*/
-    public Section section { get; private set; }
-    public int SectionId { get; private set; }
-    
-    
-    /*Vacunas*/
-    public ICollection<Vaccine> Vaccines { get; private set; }
-    public string UrlIot { get; private set; }
-    public string UrlPhoto { get; private set; }
-    
-    
-    
-    public string Location { get; private set; }
-    public long HearRate { get; private set; }
-    public long Temperature { get; private set; }
     
     /*Funciones*/
     public ESpecie ConvertStringToEnum(string specie)
@@ -78,8 +83,8 @@ public class Animal
     {
         Name = name;
         Specie = ConvertStringToEnum(specie);
-        UrlIot = urlIot;
-        UrlPhoto= urlPhoto;
+        this.urlIot = urlIot;
+        this.urlPhoto= urlPhoto;
     }
 
     public void UpdateInformationIot(string location, long hearRate, long temperature)
