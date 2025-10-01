@@ -4,6 +4,8 @@ using FarmGuard_Backend.Animals.Domain.Model.Commands;
 using FarmGuard_Backend.Animals.Domain.Model.Queries;
 using FarmGuard_Backend.Animals.Domain.Repositories;
 using FarmGuard_Backend.Animals.Domain.Services;
+using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
+using FarmGuard_Backend.MedicHistory.Domain.Repositories;
 using FarmGuard_Backend.Shared.Domain.Repositories;
 
 namespace FarmGuard_Backend.Animals.Application.Internal.ComandServices;
@@ -12,6 +14,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
     IUnitOfWork unitOfWork,
     ExternalNotificationService externalNotificationService,
     IStorageService storageService,
+    IMedicalHistoryRepository medicalHistoryRepository,
     IIventoryRepository inIventoryRepository):IAnimalCommandService
     
 {
@@ -29,6 +32,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             //Guardar imagen en el servicio de almacenamiento
             var urlPhoto = await storageService.SaveFile(command.Photo,inventory.Id);
             
+            
             /*Aqui se crea la la entidad animal*/
             var animal = new Animal(
                 command.name, 
@@ -45,6 +49,11 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             
             /*Aca se guarda en db por transaccion*/
             await animalRepository.AddAsync(animal);
+;
+            await unitOfWork.CompleteAsync();
+            
+            //Crear historial medico vacio
+            await medicalHistoryRepository.AddAsync(new MedicalHistory(animal.Id));
             await unitOfWork.CompleteAsync();
             return animal;
 

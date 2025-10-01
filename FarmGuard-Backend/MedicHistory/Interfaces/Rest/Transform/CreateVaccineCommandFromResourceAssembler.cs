@@ -5,12 +5,13 @@ namespace FarmGuard_Backend.MedicHistory.Interfaces.Rest.Transform;
 
 public class CreateVaccineCommandFromResourceAssembler
 {
-    public static CreateVaccineCommand ToCommandFromResource(CreateVaccineResource resource, string serialAnimalId)
+    public static CreateVaccineCommand ToCommandFromResource(CreateVaccineResource resource,int medicalHistoryId)
     {
         return new CreateVaccineCommand(
-            serialAnimalId, 
-            resource.name, 
-            resource.description, 
-            resource.date_expiration);
+            resource.Name,
+            resource.Manufacturer,
+            resource.Schema,
+            medicalHistoryId
+        );
     }
 }

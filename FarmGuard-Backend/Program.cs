@@ -155,6 +155,26 @@ builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
 builder.Services.AddScoped<IVaccineCommandService, VaccineCommandService>();
 builder.Services.AddScoped<IVaccineQueryService,VaccineQueryService>();
 
+builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
+builder.Services.AddScoped<IMedicationCommandService, MedicationCommandService>();
+builder.Services.AddScoped<IMedicationQueryService, MedicationQueryService>();
+
+builder.Services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
+builder.Services.AddScoped<IMedicalHistoryCommandService, MedicalHistoryCommandService>();
+builder.Services.AddScoped<IMedicalHistoryQueryService, MedicalHistoryQueryService>();
+
+builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
+builder.Services.AddScoped<ITreatmentCommandService, TreatmentCommandService>();
+builder.Services.AddScoped<ITreatmentQueryService, TreatmentQueryService>();
+
+builder.Services.AddScoped<IDiseaseRepository,DiseaseRepository>();
+builder.Services.AddScoped<IDiseaseCommandService,DiseaseCommandService>();
+builder.Services.AddScoped<IDiseaseQueryService,DiseaseQueryService>();
+
+builder.Services.AddScoped<IDiseaseDiagnosisRepository,DiseaseDiagnosisRepository>();
+builder.Services.AddScoped<IDiseaseDiagnosisCommandService,DiseaseDiagnosisCommandService>();
+builder.Services.AddScoped<IDiseaseDiagnosisQueryService,DiseaseDiagnosisQueryService>();
+
 //----------------Profile BoundedContext---------------------
 builder.Services.AddScoped<IProfileRepository,ProfileRepository>();
 builder.Services.AddScoped<IProfileCommandService,ProfileCommandService>();

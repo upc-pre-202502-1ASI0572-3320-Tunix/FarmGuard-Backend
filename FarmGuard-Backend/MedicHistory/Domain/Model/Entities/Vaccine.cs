@@ -1,25 +1,27 @@
 using FarmGuard_Backend.Animals.Domain.Model.Aggregates;
+using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 
 namespace FarmGuard_Backend.MedicHistory.Domain.Model.Entities;
 
 public class Vaccine
 {
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public string Manufacturer { get; private set; }
+    public string Schema { get; private set; }
+
+    public int MedicalHistoryId { get; private set; }
+    public MedicalHistory MedicalHistory { get; private set; }
+
     public Vaccine(){}
 
-    public Vaccine(string name, string description, DateTime date, int animalId)
+    public Vaccine( string name, string manufacturer, string schema, int medicalHistoryId)
     {
         Name = name;
-        Description = description;
-        Date = date;
-        AnimalId = animalId;
+        Manufacturer = manufacturer;
+        Schema = schema;
+        MedicalHistoryId = medicalHistoryId;
     }
-    
-    public int Id { get; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public DateTime Date { get; private set; }
-    
-    public int AnimalId { get;  private set; }
-    
-    public Animal Animal { get; private set; }
+
+
 }
