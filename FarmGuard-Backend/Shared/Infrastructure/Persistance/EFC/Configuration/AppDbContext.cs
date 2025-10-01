@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using FarmGuard_Backend.Animals.Domain.Model.Aggregates;
 using FarmGuard_Backend.IAM.Domain.Model.Aggregates;
+using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Model.Entities;
 using FarmGuard_Backend.Notifications.Domain.Model.Aggregates;
 using FarmGuard_Backend.profile.Domain.Model.Aggregate;
@@ -35,8 +37,8 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         });
         builder.Entity<Animal>().Property(p => p.Name).IsRequired();
         builder.Entity<Animal>().Property(p => p.Specie).IsRequired();
-        builder.Entity<Animal>().Property(p => p.UrlPhoto).IsRequired();
-        builder.Entity<Animal>().Property(p => p.UrlIot).IsRequired();
+        builder.Entity<Animal>().Property(p => p.urlPhoto).IsRequired();
+        builder.Entity<Animal>().Property(p => p.urlIot).IsRequired();
         builder.Entity<Animal>().Property(p => p.Location).IsRequired();
         builder.Entity<Animal>().Property(p => p.Temperature).IsRequired().HasColumnType("decimal(18,2)");
         builder.Entity<Animal>().Property(p => p.HearRate).IsRequired().HasColumnType("decimal(18,2)");
@@ -48,12 +50,49 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         
         
         /*MedicalHistory Bounded Context*/
+        /*Vacuna*/
         builder.Entity<Vaccine>().HasKey(v => v.Id);
         builder.Entity<Vaccine>().Property(v => v.Id)
             .IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Vaccine>().Property(v => v.Name).IsRequired();
-        builder.Entity<Vaccine>().Property(v => v.Description).IsRequired();
-        builder.Entity<Vaccine>().Property(v => v.Date).IsRequired();
+        builder.Entity<Vaccine>().Property(v => v.Manufacturer ).IsRequired();
+        builder.Entity<Vaccine>().Property(v => v.Schema ).IsRequired();
+        /*Historia Medica*/
+        builder.Entity<MedicalHistory>().HasKey(m => m.Id);
+        builder.Entity<MedicalHistory>().Property(m => m.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        /*Diagnostico Enfermedad*/
+        builder.Entity<DiseaseDiagnosis>().HasKey(d => d.Id);
+        builder.Entity<DiseaseDiagnosis>().Property(d => d.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<DiseaseDiagnosis>().Property(d => d.Severity).IsRequired();
+        builder.Entity<DiseaseDiagnosis>().Property(d => d.Notes).IsRequired();
+        builder.Entity<DiseaseDiagnosis>().Property(d => d.DiagnosedAt).IsRequired();
+        /*Enfermedad*/
+        builder.Entity<Disease>().HasKey(d => d.Id);
+        builder.Entity<Disease>().Property(d => d.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Disease>().Property(d => d.Name).IsRequired();
+        builder.Entity<Disease>().Property(d => d.Code).IsRequired();
+        
+        /*tratamiento*/
+        builder.Entity<Treatment>().HasKey(t =>t.Id);
+        builder.Entity<Treatment>().Property(t => t.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Treatment>().Property(t => t.Title).IsRequired();
+        builder.Entity<Treatment>().Property(t => t.Notes).IsRequired();
+        builder.Entity<Treatment>().Property(t => t.StartDate).IsRequired();
+        builder.Entity<Treatment>().Property(t => t.Status).IsRequired();
+        
+        /*Medicacion*/
+        builder.Entity<Medication>().HasKey(m => m.Id);
+        builder.Entity<Medication>().Property(m => m.Id)
+            .IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Medication>().Property(m => m.Name).IsRequired();
+        builder.Entity<Medication>().Property(m => m.DoseDefault).IsRequired();
+        builder.Entity<Medication>().Property(m => m.ActiveIngredient).IsRequired();
+        builder.Entity<Medication>().Property(m => m.RouteOfAdministration).IsRequired();
+        
         
         /*Profile Bounded Context*/
         builder.Entity<Profile>().HasKey(p=>p.Id);
@@ -75,16 +114,49 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         });
         
         /*Relaciones*/
-        builder.Entity<Animal>()
-            .HasMany(a => a.Vaccines)
-            .WithOne(v => v.Animal)
-            .HasForeignKey(v => v.AnimalId)
-            .HasPrincipalKey(a => a.Id);
+        
+        builder.Entity<MedicalHistory>()
+            .HasOne(m => m.Animal)
+            .WithOne(a => a.medicalHistory)
+            .HasForeignKey<MedicalHistory>(m => m.AnimalId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Entity<MedicalHistory>()
+            .HasMany( m => m.Vaccines )
+            .WithOne( v => v.MedicalHistory)
+            .HasForeignKey( v => v.MedicalHistoryId )
+            .HasPrincipalKey( m => m.Id );
+        
+        builder.Entity<MedicalHistory>()
+            .HasMany(m => m.Treatments)
+            .WithOne(t => t.MedicalHistory)
+            .HasForeignKey(t => t.MedicalHistoryId)
+            .HasPrincipalKey(m => m.Id);
+        
+        builder.Entity<MedicalHistory>()
+            .HasMany(m => m.DiseaseDiagnoses)
+            .WithOne(d => d.MedicalHistory)
+            .HasForeignKey(d => d.MedicalHistoryId)
+            .HasPrincipalKey(m => m.Id);
+        
+        builder.Entity<Disease>()
+            .HasOne(d => d.DiseaseDiagnosis)
+            .WithMany(dd => dd.Diseases)
+            .HasForeignKey(d => d.DiseaseDiagnosisId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Entity<Medication>()
+            .HasOne(m => m.Treatment)
+            .WithMany(t => t.Medications)
+            .HasForeignKey(m => m.TreatmentId)
+            .OnDelete(DeleteBehavior.Cascade);
+            
+        
 
         builder.Entity<Section>()
             .HasMany(i => i.Animals)
             .WithOne(a => a.section)
-            .HasForeignKey(a => a.InventoryId)
+            .HasForeignKey(a => a.SectionId)
             .HasPrincipalKey(i => i.Id);
 
         builder.Entity<Profile>()
