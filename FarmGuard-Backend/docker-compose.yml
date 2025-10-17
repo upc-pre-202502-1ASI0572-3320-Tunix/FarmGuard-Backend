@@ -1,0 +1,63 @@
+# Versión de la sintaxis de Docker Compose. La 3.8 es una versión moderna y estable.
+version: '3.8'
+
+# Definición de los servicios (contenedores) que compondrán tu aplicación.
+services:
+  # Servicio para tu aplicación ASP.NET Core
+  app:
+    image: alegre33216/farmguard-backend-app:latest
+    container_name: farmguard-backend
+    ports:
+      - "80:8080"
+    environment:
+      # Variable de entorno para la cadena de conexión que apunta al servicio 'db'
+      - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=farmguard_db;User=user;Password=Upc@333216;
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    # Establece una dependencia. El servicio 'app' no se iniciará hasta que
+    # el servicio 'db' esté completamente saludable y listo para aceptar conexiones.
+    depends_on:
+      db:
+        condition: service_healthy
+    # Conecta este servicio a nuestra red personalizada.
+    networks:
+      - farmguard-network
+
+  # Servicio para la base de datos MySQL local
+  db:
+    image: mysql:8.0
+    container_name: farmguard-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password # Contraseña para el usuario root
+      MYSQL_DATABASE: farmguard_db      # Crea una base de datos con este nombre
+      MYSQL_USER: user                  # Crea un usuario con este nombre
+      MYSQL_PASSWORD: Upc@333216          # Establece la contraseña para el nuevo usuario
+    ports:
+      - "3307:3306"
+    # Monta un volumen para persistir los datos de la base de datos.
+    # Esto evita que pierdas tus datos si el contenedor se elimina o reinicia.
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # Comprobación de estado para asegurar que la base de datos esté lista
+    # antes de que la aplicación intente conectarse.
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Conecta este servicio a nuestra red personalizada.
+    networks:
+      - farmguard-network
+
+# Definición de las redes que usarán los servicios.
+networks:
+  farmguard-network:
+    driver: bridge
+
+# Definición de los volúmenes para la persistencia de datos.
+volumes:
+  # El volumen para los datos de MySQL.
+  mysql_data:
+    driver: local
+
