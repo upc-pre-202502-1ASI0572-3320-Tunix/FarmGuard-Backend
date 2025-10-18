@@ -32,6 +32,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             //Guardar imagen en el servicio de almacenamiento
             var urlPhoto = await storageService.SaveFile(command.Photo,inventory.Id);
             
+
             
             /*Aqui se crea la la entidad animal*/
             var animal = new Animal(
@@ -44,17 +45,19 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
                 command.temperature,
                 inventory.Id,
                 command.sex,
-                command.birthDate,1);
+                command.birthDate);
             
             
             /*Aca se guarda en db por transaccion*/
             await animalRepository.AddAsync(animal);
 ;
-            await unitOfWork.CompleteAsync();
+            
             
             //Crear historial medico vacio
-            await medicalHistoryRepository.AddAsync(new MedicalHistory(animal.Id));
+            await medicalHistoryRepository.AddAsync(new MedicalHistory(animal));
             await unitOfWork.CompleteAsync();
+            
+
             return animal;
 
         }

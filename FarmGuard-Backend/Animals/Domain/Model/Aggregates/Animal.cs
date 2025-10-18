@@ -21,10 +21,11 @@ public class Animal
     public int SectionId { get; private set; }
     
     
-    /*Vacunas*/
+    /*Historias Medicas*/
     public MedicalHistory medicalHistory { get; private set; }
-    public int MedicalHistoryId { get; private set; }
-
+    
+    /*Food*/
+    public FoodDiary FoodDiary { get; private set; }
     
     
     public string Location { get; private set; }
@@ -42,8 +43,7 @@ public class Animal
         long temperature,
         int sectionId,
         bool sex,
-        DateTime birthDate,
-        int medicalHistoryId)
+        DateTime birthDate)
     {
         Name = name;
         SerialNumber = new SerialNumberAnimal();
@@ -54,7 +54,7 @@ public class Animal
         this.urlIot = urlIot;
         this.urlPhoto = urlPhoto;
 
-        MedicalHistoryId = medicalHistoryId;
+
         
         Location = location;
         HearRate = hearRate;

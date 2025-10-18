@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using FarmGuard_Backend.Animals.Domain.Model.Aggregates;
+using FarmGuard_Backend.Animals.Domain.Model.Entity;
 using FarmGuard_Backend.IAM.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Model.Entities;
@@ -47,6 +48,19 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         builder.Entity<Section>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Section>().Property(i => i.Name).IsRequired();
         
+        
+        /**Food Diary*/
+        builder.Entity<FoodDiary>().HasKey(i=>i.Id);
+        builder.Entity<FoodDiary>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<FoodDiary>().Property(i => i.Date).IsRequired();
+        
+        /*Food Entry*/
+        builder.Entity<FoodEntry>().HasKey(i=>i.Id);
+        builder.Entity<FoodEntry>().Property(i => i.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<FoodEntry>().Property(i => i.Name).IsRequired();
+        builder.Entity<FoodEntry>().Property(i => i.Quantity).IsRequired().HasColumnType("decimal(18,2)");
+        builder.Entity<FoodEntry>().Property(i => i.Time).IsRequired();
+        builder.Entity<FoodEntry>().Property(i => i.Notes).IsRequired();
         
         
         /*MedicalHistory Bounded Context*/
@@ -114,6 +128,17 @@ public class AppDbContext(DbContextOptions options):DbContext(options)
         });
         
         /*Relaciones*/
+        
+        builder.Entity<FoodDiary>()
+            .HasOne(f => f.Animal)
+            .WithOne(a => a.FoodDiary)
+            .HasForeignKey<FoodDiary>(f => f.AnimalId)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<FoodEntry>().
+            HasOne(fe => fe.FoodDiary)
+            .WithMany(fd => fd.FoodEntries)
+            .HasForeignKey(fe => fe.FoodDiaryId)
+            .HasPrincipalKey(fd => fd.Id);
         
         builder.Entity<MedicalHistory>()
             .HasOne(m => m.Animal)

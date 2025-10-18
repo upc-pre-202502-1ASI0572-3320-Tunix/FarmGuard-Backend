@@ -25,7 +25,6 @@
 
     <ItemGroup>
       <Folder Include="Animals\Domain\Model\Entities\" />
-      <Folder Include="MedicHistory\Domain\Model\ValueObjects\" />
     </ItemGroup>
 
     <ItemGroup>
