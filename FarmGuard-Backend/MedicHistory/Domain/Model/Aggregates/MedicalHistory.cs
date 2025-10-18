@@ -16,9 +16,9 @@ public class MedicalHistory
     
     public MedicalHistory(){}
     
-    public MedicalHistory(int animalId)
+    public MedicalHistory(Animal animal)
     {
-        AnimalId = animalId;
+        Animal = animal;
         Vaccines = new List<Vaccine>();
         Treatments = new List<Treatment>();
         DiseaseDiagnoses = new List<DiseaseDiagnosis>();

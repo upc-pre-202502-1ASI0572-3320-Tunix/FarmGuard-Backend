@@ -11,7 +11,7 @@ public class MedicalHistoryCommandService(IMedicalHistoryRepository repository,I
     public async Task<MedicalHistory?> Handle(CreateMedicalHistoryCommand command)
     {
         /*Verificar si animal existe*/
-        var entity = new MedicalHistory(command.AnimalId);
+        var entity = new MedicalHistory(command.animal);
         await repository.AddAsync(entity);
         await unitOfWork.CompleteAsync();
         return entity;
