@@ -80,5 +80,14 @@ public class AnimalController(IAnimalCommandService animalCommandService, IAnima
         return Ok(resources);*/
     }
 
+    [HttpGet("id/{idAnimal}")]
+    public async Task<IActionResult> GetAnimalById(int idAnimal)
+    {
+        var animal = await animalQueryService.Handle(new GetAnimalByIdQuery(idAnimal));
+        if(animal == null) return NotFound();
+        var resource = AnimalResourceFromEntityAssembler.ToResourceFromEntity(animal);
+        return Ok(resource);
+    }
+
 }
 
