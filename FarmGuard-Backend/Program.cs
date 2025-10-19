@@ -99,9 +99,9 @@ builder.Services.AddSwaggerGen(
         c.SwaggerDoc("v1",
             new OpenApiInfo
             {
-                Title = "DevDream.FarmGuard.Api",
+                Title = "Tunix.FarmGuard.Api",
                 Version = "v1",
-                Description = "DevDream FarmGuard Platform Api",
+                Description = "Tunix FarmGuard Platform Api",
                 TermsOfService = new Uri("https://example.com/terms"),
                 License = new OpenApiLicense
                 {
@@ -149,6 +149,11 @@ builder.Services.AddScoped<ISectionCommandService, SectionCommandService>();
 builder.Services.AddScoped<ISectionQueryService, SectionQueryService>();
 
 builder.Services.AddScoped<IStorageService, StorageService>();
+
+builder.Services.AddScoped<IFoodDiaryRepository, FoodDiaryRepository>();
+builder.Services.AddScoped<IFoodEntryRepository, FoodEntryRepository>();
+builder.Services.AddScoped<IFoodCommandService, FoodCommandService>();
+builder.Services.AddScoped<IFoodQueryService, FoodQueryService>();
 
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();

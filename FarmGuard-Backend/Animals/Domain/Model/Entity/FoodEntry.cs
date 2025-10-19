@@ -5,7 +5,7 @@ namespace FarmGuard_Backend.Animals.Domain.Model.Entity;
 public class FoodEntry
 {
     public int Id { get; }
-    public string Name { get; }
+    public string Name { get; private set; }
     public float Quantity { get; private set; }
     public DateTime Time { get; private set; }
     public string Notes { get; private set; }
@@ -22,6 +22,11 @@ public class FoodEntry
         Quantity = quantity;
         Time = time;
         Notes = notes;
-        foodDiary = foodDiary;
+        FoodDiary = foodDiary;
     }
+    
+    public void UpdateQuantity(float quantity) { Quantity = quantity; }
+    public void UpdateTime(DateTime time) { Time = time; }
+    public void UpdateNotes(string notes) { Notes = notes; }
+    public void UpdateName(string name) { Name = name; }
 }

@@ -15,7 +15,9 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
     ExternalNotificationService externalNotificationService,
     IStorageService storageService,
     IMedicalHistoryRepository medicalHistoryRepository,
-    IIventoryRepository inIventoryRepository):IAnimalCommandService
+    IIventoryRepository inIventoryRepository,
+    IFoodDiaryRepository foodDiaryRepository):IAnimalCommandService
+    
     
 {
     public async Task<Animal?> Handle(CreateAnimalCommand command)
@@ -55,6 +57,12 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             
             //Crear historial medico vacio
             await medicalHistoryRepository.AddAsync(new MedicalHistory(animal));
+            
+            //Crear el diario de comida vacio
+            var foodDiary = new FoodDiary(animal, DateTime.UtcNow);
+            await foodDiaryRepository.AddAsync(foodDiary);
+            
+            
             await unitOfWork.CompleteAsync();
             
 

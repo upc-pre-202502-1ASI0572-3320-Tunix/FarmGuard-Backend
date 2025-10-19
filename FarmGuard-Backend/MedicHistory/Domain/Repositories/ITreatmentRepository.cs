@@ -6,6 +6,8 @@ namespace FarmGuard_Backend.MedicHistory.Domain.Repositories;
 public interface ITreatmentRepository : IBaseRepository<Treatment>
 {
     Task<IEnumerable<Treatment>> FindByMedicalHistoryId(int medicalHistoryId);
+    
+    Task<IEnumerable<Treatment>> FindByIdSection(int idSection);
 }
 
 

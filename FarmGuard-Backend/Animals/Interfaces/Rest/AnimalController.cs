@@ -35,10 +35,10 @@ public class AnimalController(IAnimalCommandService animalCommandService, IAnima
         }
     }
 
-    [HttpGet("{idAnimal}")]
-    public async Task<IActionResult> GetAnimalByIdAnimal(string idAnimal)
+    [HttpGet("{serialNumberId}")]
+    public async Task<IActionResult> GetAnimalByIdAnimal(string serialNumberId)
     {
-        var animal = await animalQueryService.Handle(new GetAnimalBySerialNumberId(idAnimal));
+        var animal = await animalQueryService.Handle(new GetAnimalBySerialNumberId(serialNumberId));
         if(animal == null) return NotFound();
         var resource = AnimalResourceFromEntityAssembler.ToResourceFromEntity(animal);
         return Ok(resource);

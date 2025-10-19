@@ -20,5 +20,6 @@ public class FoodDiary
     {
         Animal = animal;
         Date = date;
+        FoodEntries = new List<FoodEntry>();
     }
 }

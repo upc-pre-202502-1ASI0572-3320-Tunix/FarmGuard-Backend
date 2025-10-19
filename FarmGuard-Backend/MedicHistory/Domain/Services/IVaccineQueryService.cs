@@ -5,7 +5,9 @@ namespace FarmGuard_Backend.MedicHistory.Domain.Services;
 
 public interface IVaccineQueryService
 {
-    Task<IEnumerable<Vaccine>> HandleByMedicalHistoryId(GetVaccinesByMedicalHistoryId query);
-    Task <Vaccine?> HandleById(GetVaccinesById query);
+    Task<IEnumerable<Vaccine>> Handle(GetVaccinesByMedicalHistoryId query);
+    Task <Vaccine?> Handle(GetVaccinesById query);
+    
+    Task<IEnumerable<Vaccine>> Handle(GetAllVaccinesByIdSectionQuery query);
     
 }
