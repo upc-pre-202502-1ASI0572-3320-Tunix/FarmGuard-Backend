@@ -6,17 +6,17 @@ on:
   push:
     branches: ["main"]
   #pull_request:
-    #branches: ["main"]
-#Permite activar el workflow manualmente
+  #branches: ["main"]
+  #Permite activar el workflow manualmente
   workflow_dispatch:
-
 
 # los pasos de trabajo a ejecutar
 jobs:
   build-and-push:
       name: 1. Construir y Subir a Docker Hub
       runs-on: ubuntu-latest
-      
+      environment: prod
+  
       steps:
         - name: Checkout del código
           uses: actions/checkout@v4
