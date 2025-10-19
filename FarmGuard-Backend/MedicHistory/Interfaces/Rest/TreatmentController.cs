@@ -22,7 +22,7 @@ public class TreatmentController(ITreatmentCommandService treatmentCommandServic
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTreatmentById(int id)
     {
-        var treatment = await treatmentQueryService.HandleById(new GetTreatmentsById(id));
+        var treatment = await treatmentQueryService.Handle(new GetTreatmentsById(id));
         if (treatment == null) return NotFound();
         var resource = TreatmentResourceFromEntityAssembler.ToEntityFromResource(treatment);
         return Ok(resource);
@@ -32,7 +32,7 @@ public class TreatmentController(ITreatmentCommandService treatmentCommandServic
     public async Task<IActionResult> GetByMedicalHistoryId(int medicalHistoryId)
     {
         var result =
-            await treatmentQueryService.HandleByMedicalHistoryId(new GetTreatmentsByMedicalHistoryId(medicalHistoryId));
+            await treatmentQueryService.Handle(new GetTreatmentsByMedicalHistoryId(medicalHistoryId));
         return Ok(result);
     }
 

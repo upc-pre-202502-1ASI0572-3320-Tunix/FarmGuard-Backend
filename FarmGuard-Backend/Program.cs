@@ -4,7 +4,6 @@ using FarmGuard_Backend.Animals.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Animals.Application.Internal.QueryServices;
 using FarmGuard_Backend.Animals.Domain.Repositories;
 using FarmGuard_Backend.Animals.Domain.Services;
-using FarmGuard_Backend.Animals.Infrastructure.FireBase;
 using FarmGuard_Backend.Animals.Infrastructure.Persistence.EFC.Repositories;
 using FarmGuard_Backend.Animals.Interfaces.Acl;
 using FarmGuard_Backend.Animals.Interfaces.Acl.Services;
@@ -41,7 +40,9 @@ using FarmGuard_Backend.profile.Domain.Services;
 using FarmGuard_Backend.profile.Infrastructure.Persistence.EFC.Repositories;
 using FarmGuard_Backend.profile.Interfaces.Acl;
 using FarmGuard_Backend.profile.Interfaces.Acl.Services;
+using FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Shared.Domain.Repositories;
+using FarmGuard_Backend.Shared.Infrastructure.FireBase;
 using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Configuration;
 using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Configuration.Extensions;
 using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Repositories;
@@ -99,9 +100,9 @@ builder.Services.AddSwaggerGen(
         c.SwaggerDoc("v1",
             new OpenApiInfo
             {
-                Title = "DevDream.FarmGuard.Api",
+                Title = "Tunix.FarmGuard.Api",
                 Version = "v1",
-                Description = "DevDream FarmGuard Platform Api",
+                Description = "Tunix FarmGuard Platform Api",
                 TermsOfService = new Uri("https://example.com/terms"),
                 License = new OpenApiLicense
                 {
@@ -149,6 +150,11 @@ builder.Services.AddScoped<ISectionCommandService, SectionCommandService>();
 builder.Services.AddScoped<ISectionQueryService, SectionQueryService>();
 
 builder.Services.AddScoped<IStorageService, StorageService>();
+
+builder.Services.AddScoped<IFoodDiaryRepository, FoodDiaryRepository>();
+builder.Services.AddScoped<IFoodEntryRepository, FoodEntryRepository>();
+builder.Services.AddScoped<IFoodCommandService, FoodCommandService>();
+builder.Services.AddScoped<IFoodQueryService, FoodQueryService>();
 
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();

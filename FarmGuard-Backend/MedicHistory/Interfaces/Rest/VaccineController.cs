@@ -26,7 +26,7 @@ public class VaccineController(IVaccineCommandService vaccineCommandService,IVac
     [HttpGet("{id}")]
     public async Task<IActionResult> GetVaccineById(int id)
     {
-        var vaccine = await vaccineQueryService.HandleById(new GetVaccinesById(id));
+        var vaccine = await vaccineQueryService.Handle(new GetVaccinesById(id));
         if (vaccine == null) return NotFound();
         var resource = VaccineResourceFromEntityAssembler.ToEntityFromResource(vaccine);
         return Ok(resource);
@@ -36,7 +36,7 @@ public class VaccineController(IVaccineCommandService vaccineCommandService,IVac
     public async Task<IActionResult> GetByMedicalHistoryId(int medicalHistoryId)
     {
         var result =
-            await vaccineQueryService.HandleByMedicalHistoryId(new GetVaccinesByMedicalHistoryId(medicalHistoryId));
+            await vaccineQueryService.Handle(new GetVaccinesByMedicalHistoryId(medicalHistoryId));
         return Ok(result);
     }
 

@@ -1,4 +1,4 @@
-namespace FarmGuard_Backend.Animals.Application.Internal.OutboundServices;
+namespace FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 
 public interface IStorageService
 {

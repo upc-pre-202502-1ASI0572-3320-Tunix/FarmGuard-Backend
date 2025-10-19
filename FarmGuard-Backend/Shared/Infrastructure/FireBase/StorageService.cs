@@ -1,8 +1,8 @@
 using FarmGuard_Backend.Animals.Application.Internal.OutboundServices;
+using FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 using Firebase.Storage;
-using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FarmGuard_Backend.Animals.Infrastructure.FireBase;
+namespace FarmGuard_Backend.Shared.Infrastructure.FireBase;
 
 public class StorageService: IStorageService
 {

@@ -15,5 +15,12 @@ public class TreatmentRepository(AppDbContext context) : BaseRepository<Treatmen
             .Where(t => t.MedicalHistoryId == medicalHistoryId)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Treatment>> FindByIdSection(int idSection)
+    {
+        return await Context.Set<Treatment>()
+            .Where(t => t.MedicalHistory.Animal.SectionId == idSection)
+            .ToListAsync();
+    }
 }
 

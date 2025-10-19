@@ -8,4 +8,8 @@ public interface IAnimalQueryService
     Task<Animal?> Handle(GetAnimalBySerialNumberId query);
 
     Task<IEnumerable<Animal>> Handle(GetAllAnimalsByIdInventory query);
+    
+    Task<Animal?> Handle(GetAnimalByIdQuery query);
+    
+    
 }
