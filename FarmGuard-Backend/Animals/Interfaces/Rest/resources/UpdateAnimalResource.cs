@@ -4,7 +4,7 @@ public record UpdateAnimalResource(
     string Name,
     string Specie,
     string UrlIot,
-    string UrlPhoto,
+    IFormFile file,
     string Location,
     long HearRate,
     long Temperature);

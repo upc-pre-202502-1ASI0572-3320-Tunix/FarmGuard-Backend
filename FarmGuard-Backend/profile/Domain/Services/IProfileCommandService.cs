@@ -17,4 +17,6 @@ public interface IProfileCommandService
     Task<Profile?> Handle(CreateProfileCommand command);
     Task<Profile?> Handle(UpdateProfileCommand command);
     Task<Profile?> Handle(DeleteProfileByIdCommand command);
+
+    Task<Profile?> Handle(CreateProfileWithUrlPhotoCommand command);
 }

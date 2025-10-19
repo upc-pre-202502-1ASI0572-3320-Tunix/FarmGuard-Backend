@@ -5,7 +5,7 @@ public record PutAnimalCommand(
     string AnimalId,
     string Specie,
     string UrlIot,
-    string UrlPhoto,
+    IFormFile? file,
     string Location,
     long HearRate,
     long Temperature

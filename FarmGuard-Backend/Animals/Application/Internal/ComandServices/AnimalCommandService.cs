@@ -8,6 +8,7 @@ using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Repositories;
 using FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Shared.Domain.Repositories;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace FarmGuard_Backend.Animals.Application.Internal.ComandServices;
 
@@ -33,7 +34,7 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
                 throw new InvalidOperationException("El archivo excede el tamaño máximo permitido (5 MB).");
             
             //Guardar imagen en el servicio de almacenamiento
-            var urlPhoto = await storageService.SaveFile(command.Photo,inventory.Id);
+            var urlPhoto = await storageService.SaveFile(command.Photo,$"{command.name}{command.inventoryId}" ,"animals");
             
 
             
@@ -84,9 +85,12 @@ public class AnimalCommandService(IAnimalRepository animalRepository,
             var animal = await animalRepository.FindAnimalBySerialNumberIdAsync(command.AnimalId);
             if (animal is null) throw new Exception("No se encontro animal con Cierta Id Animal");
             
+            
+            var urlPhoto = await storageService.UpdateFile(command.file,$"{command.Name}{animal.SectionId}","animals");
+            
             /*aActualizamos los datos*/
             
-            animal.UpdateInformationAnimal(command.Name,command.Specie,command.UrlIot,command.UrlPhoto);
+            animal.UpdateInformationAnimal(command.Name,command.Specie,command.UrlIot,urlPhoto);
             animal.UpdateInformationIot(command.Location,command.HearRate,command.Temperature);
             
             /*Verificamos si la temperatura esta en su rango y vemos si creamos notificaciones*/

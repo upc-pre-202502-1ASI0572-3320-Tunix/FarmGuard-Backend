@@ -15,4 +15,9 @@ namespace FarmGuard_Backend.profile.Domain.Model.Commands;
 /// <param name="UrlPhoto">
 /// The urlPhoto of the profile.
 /// </param>
-public record CreateProfileCommand(string FirstName, string LastName, string Email, string UrlPhoto,int UserId);
+public record CreateProfileCommand(
+    string FirstName, 
+    string LastName, 
+    string Email, 
+    IFormFile? Photo,
+    int UserId);

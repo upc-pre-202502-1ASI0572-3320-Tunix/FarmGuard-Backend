@@ -2,6 +2,7 @@ using FarmGuard_Backend.profile.Domain.Model.Commands;
 using FarmGuard_Backend.profile.Domain.Model.Queries;
 using FarmGuard_Backend.profile.Domain.Services;
 using FarmGuard_Backend.profile.Infrastructure.Persistence.EFC.Repositories;
+using FarmGuard_Backend.profile.Interfaces.Rest.resources;
 using FarmGuard_Backend.profile.Interfaces.Rest.Transform;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace FarmGuard_Backend.profile.Interfaces.Rest;
 public class ProfileController(IProfileCommandService profileCommandService,IProfileQueryService profileQueryService):ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreateProfile([FromBody] CreateProfileResource resource)
+    public async Task<IActionResult> CreateProfile([FromForm] CreateProfileResource resource)
     {
         try
         {
@@ -50,10 +51,11 @@ public class ProfileController(IProfileCommandService profileCommandService,IPro
     }
 
     [HttpPut("{profileId}")]
-    public async Task<IActionResult> UpdateProfile([FromBody]CreateProfileResource resource, int profileId)
+    [RequestFormLimits(MultipartBodyLengthLimit = 5_000_000)]
+    public async Task<IActionResult> UpdateProfile([FromForm]UpdateProfileResource resource, int profileId)
     {
         var updateProfileCommand = new UpdateProfileCommand(profileId, resource.FirstName, resource.LastName,
-            resource.Email, resource.UrlPhoto);
+            resource.Email, resource.file);
         var profile = await profileCommandService.Handle(updateProfileCommand);
 
         var resourceSend = ProfileResourceFromEntityAssembler.ToResourceFromEntity(profile);
