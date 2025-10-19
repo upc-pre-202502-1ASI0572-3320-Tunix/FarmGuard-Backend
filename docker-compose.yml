@@ -5,7 +5,7 @@ version: '3.8'
 services:
   # Servicio para tu aplicación ASP.NET Core
   app:
-    image: alegre33216/farmguard-backend-app:latest
+    image: alegre33216/farmguard-backend:latest
     container_name: farmguard-backend
     ports:
       - "80:8080"
