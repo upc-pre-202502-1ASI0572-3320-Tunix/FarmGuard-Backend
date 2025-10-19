@@ -36,7 +36,7 @@ jobs:
         - name: Construir y pushear la imagen
           uses: docker/build-push-action@v5
           with:
-            context: . # Directorio raíz de tu proyecto
+            context: ./FarmGuard-Backend # Directorio raíz de tu proyecto
             # Asegúrate que la ruta a tu Dockerfile sea correcta
             file: ./FarmGuard-Backend/Dockerfile 
             push: true
