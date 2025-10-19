@@ -6,6 +6,7 @@ using FarmGuard_Backend.Animals.Domain.Repositories;
 using FarmGuard_Backend.Animals.Domain.Services;
 using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Repositories;
+using FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Shared.Domain.Repositories;
 
 namespace FarmGuard_Backend.Animals.Application.Internal.ComandServices;
