@@ -7,5 +7,7 @@ public interface IDiseaseDiagnosisQueryService
 {
     Task<IEnumerable<DiseaseDiagnosis>> HandleByMedicalHistoryId(GetDiseaseDiagnosisByMedicalHistoryId query);
     Task<DiseaseDiagnosis?> HandleById(GetDiseaseDiagnosisById query);
+
+    Task<IEnumerable<DiseaseDiagnosis>> Handle(GetDiagnosesBySectionAndDateQuery query);
 }
 

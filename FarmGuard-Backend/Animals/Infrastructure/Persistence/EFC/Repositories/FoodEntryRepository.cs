@@ -21,4 +21,11 @@ public class FoodEntryRepository(AppDbContext context):BaseRepository<FoodEntry>
         return await Context.Set<FoodEntry>()
             .FirstOrDefaultAsync(fe => fe.FoodDiaryId == foodDiaryId);
     }
+
+    public async Task<IEnumerable<FoodEntry>> GetBySectionIdAndDate(int idSection, DateTime startDate, DateTime endDate)
+    {
+        return await Context.Set<FoodEntry>()
+            .Where(fe => fe.FoodDiary.Animal.SectionId == idSection && fe.Time >= startDate && fe.Time <= endDate)
+            .ToListAsync();
+    }
 }

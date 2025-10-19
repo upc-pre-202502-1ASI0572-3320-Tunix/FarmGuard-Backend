@@ -23,4 +23,9 @@ public class VaccineQueryService(IVaccineRepository vaccineRepository,IUnitOfWor
     {
         return await  vaccineRepository.FindBySectionIdAsync(query.idSection);
     }
+
+    public async Task<IEnumerable<Vaccine>> Handle(GetAllVaccinesBySectionAndDateQuery query)
+    {
+       return await vaccineRepository.FindByIdSectionAndDateAsync(query.idSection, query.startDate, query.endDate);
+    }
 }

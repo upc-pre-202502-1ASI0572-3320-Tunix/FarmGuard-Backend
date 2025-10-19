@@ -8,6 +8,8 @@ public interface ITreatmentRepository : IBaseRepository<Treatment>
     Task<IEnumerable<Treatment>> FindByMedicalHistoryId(int medicalHistoryId);
     
     Task<IEnumerable<Treatment>> FindByIdSection(int idSection);
+    
+    Task<IEnumerable<Treatment>> FindBySectionAndDate(int idSection, DateTime startDate, DateTime endDate);
 }
 
 

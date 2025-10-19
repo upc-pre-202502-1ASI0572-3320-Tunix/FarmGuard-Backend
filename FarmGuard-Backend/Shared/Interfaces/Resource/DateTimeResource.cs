@@ -1,3 +1,3 @@
 namespace FarmGuard_Backend.Shared.Interfaces.Resource;
 
-public record DateTimeResource();
+public record DateTimeResource(DateTime startDate,  DateTime endDate);

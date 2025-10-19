@@ -17,4 +17,9 @@ public class DiseaseDiagnosisQueryService(IDiseaseDiagnosisRepository repository
     {
         return await repository.FindByIdAsync(query.Id);
     }
+
+    public async Task<IEnumerable<DiseaseDiagnosis>> Handle(GetDiagnosesBySectionAndDateQuery query)
+    {
+        return await repository.FindByIdSectionAndDateAsync(query.idSection, query.startDate, query.endDate);
+    }
 }
