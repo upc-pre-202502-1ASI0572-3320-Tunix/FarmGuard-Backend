@@ -45,14 +45,15 @@ public class AnimalController(IAnimalCommandService animalCommandService, IAnima
     }
 
     [HttpPut("{idSerialAnimal}")]
-    public async Task<IActionResult> PutAnimalById([FromBody] UpdateAnimalResource resource,string idSerialAnimal)
+    [RequestFormLimits(MultipartBodyLengthLimit = 5_000_000)]
+    public async Task<IActionResult> PutAnimalById(string idSerialAnimal,[FromForm] UpdateAnimalResource resource)
     {
         var updateAnimalCommand = new PutAnimalCommand(
             resource.Name,
             idSerialAnimal,
             resource.Specie.ToString(),
             resource.UrlIot,
-            resource.UrlPhoto,
+            resource.file,
             resource.Location,
             resource.HearRate,
             resource.Temperature);

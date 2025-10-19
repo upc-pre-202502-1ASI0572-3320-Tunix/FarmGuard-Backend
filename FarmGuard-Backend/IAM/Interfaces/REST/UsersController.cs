@@ -44,6 +44,7 @@ public class UsersController(IUserQueryService userQueryService) : ControllerBas
      * <returns>The user resources</returns>
      */
     [HttpGet]
+    
     public async Task<IActionResult> GetAllUsers()
     {
         var getAllUsersQuery = new GetAllUsersQuery();
