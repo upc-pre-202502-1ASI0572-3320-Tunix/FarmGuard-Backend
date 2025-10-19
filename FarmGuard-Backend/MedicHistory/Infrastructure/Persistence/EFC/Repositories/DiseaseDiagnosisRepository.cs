@@ -17,4 +17,11 @@ public class DiseaseDiagnosisRepository(AppDbContext context) : BaseRepository<D
             .ToListAsync();
 
     }
+
+    public async Task<IEnumerable<DiseaseDiagnosis>> FindByIdSectionAndDateAsync(int idSection, DateTime startDate, DateTime endDate)
+    {
+        return await Context.Set<DiseaseDiagnosis>()
+            .Where(dd => dd.MedicalHistory.Animal.SectionId == idSection && dd.DiagnosedAt >= startDate &&  dd.DiagnosedAt <= endDate)
+            .ToListAsync();
+    }
 }

@@ -22,5 +22,12 @@ public class TreatmentRepository(AppDbContext context) : BaseRepository<Treatmen
             .Where(t => t.MedicalHistory.Animal.SectionId == idSection)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Treatment>> FindBySectionAndDate(int idSection, DateTime startDate, DateTime endDate)
+    {
+        return await Context.Set<Treatment>()
+            .Where(t => t.MedicalHistory.Animal.SectionId == idSection && t.StartDate >= startDate && t.StartDate <= endDate)
+            .ToListAsync();
+    }
 }
 

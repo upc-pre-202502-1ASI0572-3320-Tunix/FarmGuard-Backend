@@ -16,5 +16,7 @@ public interface IFoodQueryService
     Task<FoodDiary?> Handle(GetFoodDiaryByIdQuery query);
     Task<FoodDiary?> Handle(GetFoodDiaryBySerialNumberdAnimalQuery query);
     
+    Task<IEnumerable<FoodEntry>>Handle(GetFoodEntryBySectionAndDateQuery query);
+    
     
 }

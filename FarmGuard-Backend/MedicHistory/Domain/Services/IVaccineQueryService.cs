@@ -10,4 +10,6 @@ public interface IVaccineQueryService
     
     Task<IEnumerable<Vaccine>> Handle(GetAllVaccinesByIdSectionQuery query);
     
+    Task<IEnumerable<Vaccine>> Handle(GetAllVaccinesBySectionAndDateQuery query);
+    
 }

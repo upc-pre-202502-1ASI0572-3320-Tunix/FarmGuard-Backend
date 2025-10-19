@@ -43,4 +43,9 @@ public class FoodQueryService(IFoodDiaryRepository diaryRepository,IFoodEntryRep
     {
         return await diaryRepository.GetBySerialNumberAnimal(query.SerialNumber);
     }
+
+    public async Task<IEnumerable<FoodEntry>> Handle(GetFoodEntryBySectionAndDateQuery query)
+    {
+        return await foodEntryRepository.GetBySectionIdAndDate(query.idSection,query.startDate,query.endDate);
+    }
 }

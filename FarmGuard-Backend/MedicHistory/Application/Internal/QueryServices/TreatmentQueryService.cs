@@ -23,5 +23,10 @@ public class TreatmentQueryService(ITreatmentRepository treatmentRepository) : I
     {
         return await treatmentRepository.FindByIdSection(query.idSection);
     }
+
+    public async Task<IEnumerable<Treatment>> Handle(GetTreatmentsBySectionAndDateQuery query)
+    {
+        return await treatmentRepository.FindBySectionAndDate(query.idSection, query.startDate, query.endDate);
+    }
 }
 

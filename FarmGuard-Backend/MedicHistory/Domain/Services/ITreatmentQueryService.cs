@@ -11,4 +11,6 @@ public interface ITreatmentQueryService
     Task <Treatment?> Handle(GetTreatmentsById query);
 
     Task<IEnumerable<Treatment>> Handle(GetTreatmentsByIdSectionQuery query);
+    
+    Task<IEnumerable<Treatment>> Handle(GetTreatmentsBySectionAndDateQuery query);
 }

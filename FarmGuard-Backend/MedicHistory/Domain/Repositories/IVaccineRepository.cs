@@ -7,4 +7,5 @@ public interface IVaccineRepository:IBaseRepository<Vaccine>
 {
     Task<IEnumerable<Vaccine>> FindByMedicalHistoryIdAsync(int medicalHistoryId);
     Task<IEnumerable<Vaccine>> FindBySectionIdAsync(int idSection);
+    Task<IEnumerable<Vaccine>> FindByIdSectionAndDateAsync(int idDiagnosisId, DateTime startDate, DateTime endDate);
 }
