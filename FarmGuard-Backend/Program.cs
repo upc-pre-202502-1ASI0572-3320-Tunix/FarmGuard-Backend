@@ -224,9 +224,14 @@ builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllPolicy",
-        policy => policy.AllowAnyOrigin()
+        // Development: permitir origen local del front
+        policy => policy
+            .WithOrigins("http://localhost:63540") // <- Origen permitido (puedes añadir más)
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            // Si necesitas credenciales (cookies/Authorization) descomenta la línea siguiente
+            // .AllowCredentials()
+            );
 });
 
 
@@ -252,6 +257,13 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     
 }
 
+/*
+ Important: UseRouting must be called before UseCors/UseAuthorization when using endpoint routing.
+ Add UseRouting() early in the pipeline.
+*/
+app.UseRouting();
+
+app.UseCors("AllowAllPolicy");
 
 app.UseCors("AllowAllPolicy");
 
