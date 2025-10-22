@@ -67,6 +67,7 @@ public class UserCommandService(
             if(profileId == 0) throw new Exception($"Could not create profile {command.FirstName} {command.LastName}");
         
             user.ChangeProfileId(profileId);
+            /*Posible error*/
 
             userRepository.Update(user);
             await unitOfWork.CompleteAsync();
