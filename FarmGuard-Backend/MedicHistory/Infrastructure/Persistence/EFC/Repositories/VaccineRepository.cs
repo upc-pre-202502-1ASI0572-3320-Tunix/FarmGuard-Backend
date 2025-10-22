@@ -9,10 +9,24 @@ namespace FarmGuard_Backend.MedicHistory.Infrastructure.Persistence.EFC.Reposito
 
 public class VaccineRepository(AppDbContext context) : BaseRepository<Vaccine>(context), IVaccineRepository
 {
-    public async Task<IEnumerable<Vaccine>> FindByVaccinesByIdAnimal(int idAnimal)
-    {
-        return await Context.Set<Vaccine>()
-            .Where(v => v.AnimalId == idAnimal)
-            .ToListAsync();
-    }
+   public async Task<IEnumerable<Vaccine>> FindByMedicalHistoryIdAsync(int medicalHistoryId)
+   {
+      return await Context.Set<Vaccine>()
+          .Where(v => v.MedicalHistoryId == medicalHistoryId)
+          .ToListAsync();
+   }
+
+   public async Task<IEnumerable<Vaccine>> FindBySectionIdAsync(int idSection)
+   {
+       return await Context.Set<Vaccine>()
+           .Where(v=> v.MedicalHistory.Animal.SectionId == idSection)
+           .ToListAsync();
+   }
+
+   public async Task<IEnumerable<Vaccine>> FindByIdSectionAndDateAsync(int idDiagnosisId, DateTime startDate, DateTime endDate)
+   {
+       return await Context.Set<Vaccine>()
+           .Where(v => v.MedicalHistory.Animal.SectionId == idDiagnosisId)
+           .ToListAsync();
+   }
 }

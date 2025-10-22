@@ -7,6 +7,7 @@ public class VaccineResourceFromEntityAssembler
 {
     public static VaccineResource ToEntityFromResource(Vaccine vaccine)
     {
-        return new VaccineResource(vaccine.Id,vaccine.Name, vaccine.Description,vaccine.Date);
+        // Ajuste: Vaccine ya no tiene Description ni Date
+        return new VaccineResource(vaccine.Id, vaccine.Name,vaccine.Manufacturer, vaccine.Schema);
     }
 }

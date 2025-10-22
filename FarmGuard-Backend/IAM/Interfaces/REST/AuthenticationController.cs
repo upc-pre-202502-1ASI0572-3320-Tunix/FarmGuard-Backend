@@ -44,8 +44,9 @@ public class AuthenticationController(IUserCommandService userCommandService) : 
      * <returns>A confirmation message on successful creation.</returns>
      */
     [HttpPost("sign-up")]
+    [RequestFormLimits(MultipartBodyLengthLimit = 5_000_000)]
     [AllowAnonymous]
-    public async Task<IActionResult> SignUp([FromBody] SignUpResource signUpResource)
+    public async Task<IActionResult> SignUp([FromForm] SignUpResource signUpResource)
     {
         var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(signUpResource);
         await userCommandService.Handle(signUpCommand);

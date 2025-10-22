@@ -5,5 +5,7 @@ namespace FarmGuard_Backend.MedicHistory.Domain.Repositories;
 
 public interface IVaccineRepository:IBaseRepository<Vaccine>
 {
-    Task<IEnumerable<Vaccine>> FindByVaccinesByIdAnimal(int idAnimal);
+    Task<IEnumerable<Vaccine>> FindByMedicalHistoryIdAsync(int medicalHistoryId);
+    Task<IEnumerable<Vaccine>> FindBySectionIdAsync(int idSection);
+    Task<IEnumerable<Vaccine>> FindByIdSectionAndDateAsync(int idDiagnosisId, DateTime startDate, DateTime endDate);
 }

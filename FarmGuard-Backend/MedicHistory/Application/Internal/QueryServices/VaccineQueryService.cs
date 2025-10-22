@@ -9,12 +9,23 @@ namespace FarmGuard_Backend.MedicHistory.Application.Internal.QueryServices;
 
 public class VaccineQueryService(IVaccineRepository vaccineRepository,IUnitOfWork unitOfWork,ExternalAnimalService externalAnimalService):IVaccineQueryService
 {
-    public async Task<IEnumerable<Vaccine>> Handle(GetVaccinesByIdAnimal query)
+    public async Task<IEnumerable<Vaccine>> Handle(GetVaccinesByMedicalHistoryId query)
     {
-        var idAnimal = await externalAnimalService.GetAnimalByAnimalId(query.idAnimal);
-        
-        if(idAnimal is null) throw new Exception("Animal not Found");
-        
-        return await vaccineRepository.FindByVaccinesByIdAnimal(idAnimal.Value);
+        return await vaccineRepository.FindByMedicalHistoryIdAsync(query.MedicalHistoryId);
+    }
+
+    public async Task<Vaccine?> Handle(GetVaccinesById query)
+    {
+        return await vaccineRepository.FindByIdAsync(query.Id);
+    }
+
+    public async Task<IEnumerable<Vaccine>> Handle(GetAllVaccinesByIdSectionQuery query)
+    {
+        return await  vaccineRepository.FindBySectionIdAsync(query.idSection);
+    }
+
+    public async Task<IEnumerable<Vaccine>> Handle(GetAllVaccinesBySectionAndDateQuery query)
+    {
+       return await vaccineRepository.FindByIdSectionAndDateAsync(query.idSection, query.startDate, query.endDate);
     }
 }

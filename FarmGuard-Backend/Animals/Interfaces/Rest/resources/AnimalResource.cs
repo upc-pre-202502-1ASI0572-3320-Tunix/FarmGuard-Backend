@@ -10,4 +10,7 @@ public record AnimalResource(
     int InventoryId,
     string Location,
     long HearRate,
-    long Temperature);
+    long Temperature,
+    bool Sex,
+    DateTime BirthDate
+);

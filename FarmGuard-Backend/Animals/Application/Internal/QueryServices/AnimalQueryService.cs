@@ -21,4 +21,11 @@ public class AnimalQueryService (IAnimalRepository animalRepository,IIventoryRep
 
         return await animalRepository.FindAnimalsByIdInventory(query.IdInventory);
     }
+
+    public Task<Animal?> Handle(GetAnimalByIdQuery query)
+    {
+        var animal = animalRepository.FindByIdAsync(query.id);
+        if(animal is null) throw new Exception($"No se encontro un animal con el id{query.id}");
+        return animal;
+    }
 }

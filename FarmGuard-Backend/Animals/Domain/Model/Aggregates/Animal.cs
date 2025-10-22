@@ -1,20 +1,49 @@
 using FarmGuard_Backend.Animals.Domain.Model.ValueObjects;
+using FarmGuard_Backend.MedicHistory.Domain.Model.Aggregates;
 using FarmGuard_Backend.MedicHistory.Domain.Model.Entities;
 
 namespace FarmGuard_Backend.Animals.Domain.Model.Aggregates;
 
 public class Animal
 {
+    public int Id { get; }
+    public SerialNumberAnimal SerialNumber { get; private set; }
+    public string Name { get; private set; }
+    public ESpecie Specie { get; private set; }
+    public bool Sex { get; private set; }
+    public DateTime BirthDate { get; private set; }
+    
+    public string urlIot { get; private set; }
+    public string urlPhoto { get; private set; }
+    
+    /*Inventario*/
+    public Section section { get; private set; }
+    public int SectionId { get; private set; }
+    
+    
+    /*Historias Medicas*/
+    public MedicalHistory medicalHistory { get; private set; }
+    
+    /*Food*/
+    public FoodDiary FoodDiary { get; private set; }
+    
+    
+    public string Location { get; private set; }
+    public long HearRate { get; private set; }
+    public long Temperature { get; private set; }
+    
     public Animal(){}
     public Animal(
         string name, 
         string specie, 
         string urlIot, 
         string urlPhoto, 
-        string location, 
+        string location,
         long hearRate,
         long temperature,
-        int inventoryId)
+        int sectionId,
+        bool sex,
+        DateTime birthDate)
     {
         Name = name;
         SerialNumber = new SerialNumberAnimal();
@@ -22,31 +51,20 @@ public class Animal
         //Funcion para convertir en Enum
         Specie = ConvertStringToEnum(specie);
 
-        UrlIot = urlIot;
-        UrlPhoto = urlPhoto;
+        this.urlIot = urlIot;
+        this.urlPhoto = urlPhoto;
 
-        Vaccines = new List<Vaccine>();
+
         
         Location = location;
         HearRate = hearRate;
         Temperature = temperature;
         
-        InventoryId= inventoryId;
+        SectionId= sectionId;
+        Sex = sex;
+        BirthDate = birthDate;
     }
-    public int Id { get; }
-    public SerialNumberAnimal SerialNumber { get; private set; }
-    public string Name { get; private set; }
-    public ESpecie Specie { get; private set; }
-    /*Vacunas*/
-    public ICollection<Vaccine> Vaccines { get; private set; }
-    public string UrlIot { get; private set; }
-    public string UrlPhoto { get; private set; }
-    /*Inventario*/
-    public Section section { get; private set; }
-    public int InventoryId { get; private set; }
-    public string Location { get; private set; }
-    public long HearRate { get; private set; }
-    public long Temperature { get; private set; }
+    
     
     /*Funciones*/
     public ESpecie ConvertStringToEnum(string specie)
@@ -65,8 +83,8 @@ public class Animal
     {
         Name = name;
         Specie = ConvertStringToEnum(specie);
-        UrlIot = urlIot;
-        UrlPhoto= urlPhoto;
+        this.urlIot = urlIot;
+        this.urlPhoto= urlPhoto;
     }
 
     public void UpdateInformationIot(string location, long hearRate, long temperature)
@@ -78,50 +96,25 @@ public class Animal
 
     public bool GetDescriptionNotificationByHearRate()
     {
+        // Agrupación por tipo usando los valores reales del enum
         return Specie switch
         {
-            ESpecie.Mamíferos => HearRate >=60 && HearRate <= 100,
-            ESpecie.Aves => HearRate >=150 && HearRate <= 600,
-            ESpecie.Reptiles => HearRate >=10 && HearRate <= 80,
-            ESpecie.Anfibios =>HearRate >=30 && HearRate <= 70,
-            ESpecie.Peces =>HearRate >=10 && HearRate <= 40,
-            ESpecie.Insectos => HearRate >=100 && HearRate <= 250,
-            ESpecie.Arácnidos => HearRate >=30 && HearRate <= 80,
-            ESpecie.Moluscos => HearRate >=5 && HearRate <= 20,
-            ESpecie.Crustáceos => HearRate >=60 && HearRate <= 30,
-            ESpecie.Equinodermos => HearRate >=1 && HearRate <= 5,
+            ESpecie.Vaca or ESpecie.Caballo or ESpecie.Oveja or ESpecie.Cerdo or ESpecie.Cabra => HearRate >= 60 && HearRate <= 100, // Mamíferos
+            ESpecie.Pollo or ESpecie.Pato => HearRate >= 150 && HearRate <= 600, // Aves
+            // Si agregas reptiles, anfibios, peces, etc. en el enum, puedes añadir aquí
             _ => false
-
         };
-        /*
-
-        return isNormal
-            ? $"La frecuencia cardíaca de {HearRate} está dentro del rango normal para la especie {Specie.ToString()}."
-            : $"La frecuencia cardíaca de {HearRate} está fuera del rango normal para la especie {Specie.ToString()}.";*/
     }
     
     public bool GetDescriptionNotificationByTemperature()
     {
+        // Agrupación por tipo usando los valores reales del enum
         return Specie switch
         {
-            ESpecie.Mamíferos => Temperature >= 36.0 && Temperature <= 38.0,
-            ESpecie.Aves => Temperature >= 40.0 && Temperature <= 42.0,
-            ESpecie.Reptiles => Temperature >= 20.0 && Temperature <= 30.0,
-            ESpecie.Anfibios => Temperature >= 15.0 && Temperature <= 25.0,
-            ESpecie.Peces => Temperature >= 10.0 && Temperature <= 22.0,
-            ESpecie.Insectos => Temperature >= 20.0 && Temperature <= 35.0,
-            ESpecie.Arácnidos => Temperature >= 20.0 && Temperature <= 30.0,
-            ESpecie.Moluscos => Temperature >= 10.0 && Temperature <= 20.0,
-            ESpecie.Crustáceos => Temperature >= 10.0 && Temperature <= 20.0,
-            ESpecie.Equinodermos => Temperature >= 5.0 && Temperature <= 10.0,
+            ESpecie.Vaca or ESpecie.Caballo or ESpecie.Oveja or ESpecie.Cerdo or ESpecie.Cabra => Temperature >= 36.0 && Temperature <= 38.0, // Mamíferos
+            ESpecie.Pollo or ESpecie.Pato => Temperature >= 40.0 && Temperature <= 42.0, // Aves
+            // Si agregas reptiles, anfibios, peces, etc. en el enum, puedes añadir aquí
             _ => false
-
         };
-
-        /*
-        return isNormal
-            ? $"La frecuencia cardíaca de {HearRate} está dentro del rango normal para la especie {Specie.ToString()}."
-            : $"La frecuencia cardíaca de {HearRate} está fuera del rango normal para la especie {Specie.ToString()}.";
-        */
     }
 }

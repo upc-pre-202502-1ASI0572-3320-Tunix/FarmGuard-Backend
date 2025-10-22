@@ -8,7 +8,7 @@ public class ProfileContextFacade(IProfileCommandService profileCommandService,I
 {
     public async Task<int> CreateProfile(string firstName, string lastName, string email, string urlPhoto,int userId)
     {
-        var createProfileCommand = new CreateProfileCommand(firstName, lastName, email, urlPhoto,userId);
+        var createProfileCommand = new CreateProfileWithUrlPhotoCommand(firstName, lastName, email, urlPhoto,userId);
         var profile = await profileCommandService.Handle(createProfileCommand);
 
         return profile?.Id ?? 0;

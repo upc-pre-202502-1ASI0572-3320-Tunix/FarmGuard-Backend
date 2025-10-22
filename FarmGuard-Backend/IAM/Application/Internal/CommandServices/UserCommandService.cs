@@ -3,6 +3,7 @@ using FarmGuard_Backend.IAM.Domain.Model.Aggregates;
 using FarmGuard_Backend.IAM.Domain.Model.Commands;
 using FarmGuard_Backend.IAM.Domain.Repositories;
 using FarmGuard_Backend.IAM.Domain.Services;
+using FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Shared.Domain.Repositories;
 
 namespace FarmGuard_Backend.IAM.Application.Internal.CommandServices;
@@ -20,6 +21,7 @@ public class UserCommandService(
     ITokenService tokenService,
     IHashingService hashingService,
     IUnitOfWork unitOfWork,
+    IStorageService storageService,
     ExternalProfileService externalProfileService)
     : IUserCommandService
 {
@@ -61,9 +63,12 @@ public class UserCommandService(
         
             await userRepository.AddAsync(user);
             await unitOfWork.CompleteAsync();
+            
+            var urlPhoto = await storageService.SaveFile(command.Photo,$"{user.Id}" ,"profiles");
         
             var profileId = await externalProfileService.CreateProfileWithUser(command.FirstName, command.LastName,
-                command.Email, command.UrlPhoto,user.Id );
+                command.Email, urlPhoto,user.Id );
+            
             if(profileId == 0) throw new Exception($"Could not create profile {command.FirstName} {command.LastName}");
         
             user.ChangeProfileId(profileId);

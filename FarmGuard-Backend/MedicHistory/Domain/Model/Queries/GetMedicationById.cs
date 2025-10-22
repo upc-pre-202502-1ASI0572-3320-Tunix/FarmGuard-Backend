@@ -1,3 +1,3 @@
 namespace FarmGuard_Backend.MedicHistory.Domain.Model.Queries;
 
-public record GetVaccinesByIdAnimal(string idAnimal);
+public record GetMedicationById(int Id);

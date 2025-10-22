@@ -6,9 +6,9 @@ namespace FarmGuard_Backend.IAM.Interfaces.ACL.Services;
 
 public class IamContextFacade(IUserCommandService userCommandService, IUserQueryService userQueryService) : IIamContextFacade
 {
-    public async Task<int> CreateUser(string username, string password,string firstName, string lastName, string email, string urlPhoto)
+    public async Task<int> CreateUser(string username, string password,string firstName, string lastName, string email, IFormFile? photo )
     {
-        var signUpCommand = new SignUpCommand(username, password,firstName,lastName, email, urlPhoto);
+        var signUpCommand = new SignUpCommand(username, password,firstName,lastName, email, photo);
         await userCommandService.Handle(signUpCommand);
         var getUserByUsernameQuery = new GetUserByUsernameQuery(username);
         var result = await userQueryService.Handle(getUserByUsernameQuery);

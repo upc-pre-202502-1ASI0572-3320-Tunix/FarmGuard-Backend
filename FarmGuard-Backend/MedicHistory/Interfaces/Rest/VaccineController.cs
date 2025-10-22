@@ -13,22 +13,31 @@ namespace FarmGuard_Backend.MedicHistory.Interfaces.Rest;
 [Route("api/v1/vaccines")]
 public class VaccineController(IVaccineCommandService vaccineCommandService,IVaccineQueryService vaccineQueryService):ControllerBase
 {
-    [HttpPost("{serialAnimalId}")]
-    public async Task<IActionResult> AddVaccineBySerialAnimalId([FromBody] CreateVaccineResource resource, string serialAnimalId)
+    [HttpPost("{medicalHistoryId}")]
+    public async Task<IActionResult> AddVaccine([FromBody] CreateVaccineResource resource, int medicalHistoryId)
     {
-        var createVaccineCommand =
-            CreateVaccineCommandFromResourceAssembler.ToCommandFromResource(resource, serialAnimalId);
+        var createVaccineCommand = CreateVaccineCommandFromResourceAssembler.ToCommandFromResource(resource, medicalHistoryId);
         var vaccine = await vaccineCommandService.Handle(createVaccineCommand);
+        var resourceResult = VaccineResourceFromEntityAssembler.ToEntityFromResource(vaccine);
         
-        return Ok("Correcto");
+        return Ok(resourceResult);
     }
-
-    [HttpGet("{serialAnimalId}")]
-    public async Task<IActionResult> GetAllVaccinesByAnimalId(string serialAnimalId)
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetVaccineById(int id)
     {
-        var vaccines = await vaccineQueryService.Handle(new GetVaccinesByIdAnimal(serialAnimalId));
-        var resources = vaccines.Select(VaccineResourceFromEntityAssembler.ToEntityFromResource);
-        return Ok(resources);
+        var vaccine = await vaccineQueryService.Handle(new GetVaccinesById(id));
+        if (vaccine == null) return NotFound();
+        var resource = VaccineResourceFromEntityAssembler.ToEntityFromResource(vaccine);
+        return Ok(resource);
+    }
+    
+    [HttpGet("by-medicalhistory/{medicalHistoryId}")]
+    public async Task<IActionResult> GetByMedicalHistoryId(int medicalHistoryId)
+    {
+        var result =
+            await vaccineQueryService.Handle(new GetVaccinesByMedicalHistoryId(medicalHistoryId));
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]

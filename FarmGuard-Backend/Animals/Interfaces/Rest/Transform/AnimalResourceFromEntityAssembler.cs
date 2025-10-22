@@ -12,11 +12,13 @@ public class AnimalResourceFromEntityAssembler
             entity.Name,
             entity.SerialNumber.Number,
             entity.Specie.ToString(),
-            entity.UrlIot,
-            entity.UrlPhoto,
-            entity.InventoryId,
+            entity.urlIot,
+            entity.urlPhoto,
+            entity.SectionId,
             entity.Location,
             entity.HearRate,
-            entity.Temperature);
+            entity.Temperature,
+            entity.Sex,
+            entity.BirthDate);
     }
 }

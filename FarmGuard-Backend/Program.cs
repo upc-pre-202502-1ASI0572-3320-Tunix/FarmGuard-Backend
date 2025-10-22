@@ -40,7 +40,9 @@ using FarmGuard_Backend.profile.Domain.Services;
 using FarmGuard_Backend.profile.Infrastructure.Persistence.EFC.Repositories;
 using FarmGuard_Backend.profile.Interfaces.Acl;
 using FarmGuard_Backend.profile.Interfaces.Acl.Services;
+using FarmGuard_Backend.Shared.Application.Internal.OutboundServices;
 using FarmGuard_Backend.Shared.Domain.Repositories;
+using FarmGuard_Backend.Shared.Infrastructure.FireBase;
 using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Configuration;
 using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Configuration.Extensions;
 using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Repositories;
@@ -98,9 +100,9 @@ builder.Services.AddSwaggerGen(
         c.SwaggerDoc("v1",
             new OpenApiInfo
             {
-                Title = "DevDream.FarmGuard.Api",
+                Title = "Tunix.FarmGuard.Api",
                 Version = "v1",
-                Description = "DevDream FarmGuard Platform Api",
+                Description = "Tunix FarmGuard Platform Api",
                 TermsOfService = new Uri("https://example.com/terms"),
                 License = new OpenApiLicense
                 {
@@ -147,10 +149,37 @@ builder.Services.AddScoped<IIventoryRepository, SectionRepository>();
 builder.Services.AddScoped<ISectionCommandService, SectionCommandService>();
 builder.Services.AddScoped<ISectionQueryService, SectionQueryService>();
 
+builder.Services.AddScoped<IStorageService, StorageService>();
+
+builder.Services.AddScoped<IFoodDiaryRepository, FoodDiaryRepository>();
+builder.Services.AddScoped<IFoodEntryRepository, FoodEntryRepository>();
+builder.Services.AddScoped<IFoodCommandService, FoodCommandService>();
+builder.Services.AddScoped<IFoodQueryService, FoodQueryService>();
+
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
 builder.Services.AddScoped<IVaccineCommandService, VaccineCommandService>();
 builder.Services.AddScoped<IVaccineQueryService,VaccineQueryService>();
+
+builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
+builder.Services.AddScoped<IMedicationCommandService, MedicationCommandService>();
+builder.Services.AddScoped<IMedicationQueryService, MedicationQueryService>();
+
+builder.Services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
+builder.Services.AddScoped<IMedicalHistoryCommandService, MedicalHistoryCommandService>();
+builder.Services.AddScoped<IMedicalHistoryQueryService, MedicalHistoryQueryService>();
+
+builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
+builder.Services.AddScoped<ITreatmentCommandService, TreatmentCommandService>();
+builder.Services.AddScoped<ITreatmentQueryService, TreatmentQueryService>();
+
+builder.Services.AddScoped<IDiseaseRepository,DiseaseRepository>();
+builder.Services.AddScoped<IDiseaseCommandService,DiseaseCommandService>();
+builder.Services.AddScoped<IDiseaseQueryService,DiseaseQueryService>();
+
+builder.Services.AddScoped<IDiseaseDiagnosisRepository,DiseaseDiagnosisRepository>();
+builder.Services.AddScoped<IDiseaseDiagnosisCommandService,DiseaseDiagnosisCommandService>();
+builder.Services.AddScoped<IDiseaseDiagnosisQueryService,DiseaseDiagnosisQueryService>();
 
 //----------------Profile BoundedContext---------------------
 builder.Services.AddScoped<IProfileRepository,ProfileRepository>();
@@ -195,9 +224,14 @@ builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllPolicy",
-        policy => policy.AllowAnyOrigin()
+        // Development: permitir origen local del front
+        policy => policy
+            .WithOrigins("http://localhost:63540") // <- Origen permitido (puedes añadir más)
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            // Si necesitas credenciales (cookies/Authorization) descomenta la línea siguiente
+            // .AllowCredentials()
+            );
 });
 
 
@@ -223,6 +257,13 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     
 }
 
+/*
+ Important: UseRouting must be called before UseCors/UseAuthorization when using endpoint routing.
+ Add UseRouting() early in the pipeline.
+*/
+app.UseRouting();
+
+app.UseCors("AllowAllPolicy");
 
 app.UseCors("AllowAllPolicy");
 
