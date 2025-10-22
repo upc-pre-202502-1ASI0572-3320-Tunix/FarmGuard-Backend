@@ -224,14 +224,17 @@ builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllPolicy",
-        // Development: permitir origen local del front
-        policy => policy
-            .WithOrigins("http://localhost:63540") // <- Origen permitido (puedes añadir más)
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            // Si necesitas credenciales (cookies/Authorization) descomenta la línea siguiente
-            // .AllowCredentials()
-            );
+        policy =>
+        {
+            // Permite cualquier origen de localhost (independientemente del puerto)
+            policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            
+            // Si también tienes un frontend ya desplegado en una URL pública,
+            // puedes añadirlo aquí también
+            // .WithOrigins("http://tu-dominio-publico.com") 
+        });
 });
 
 
