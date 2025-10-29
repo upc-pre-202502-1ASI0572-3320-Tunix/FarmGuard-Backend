@@ -52,17 +52,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 /*Configuracion LowerCaseUrl*/
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
-builder.Services.AddControllers( options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
+builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 
 /*Añadir Conexion DB*/
-
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-/*Configurar Contexto de la DB and niveles de loggin*/
 
+/*Configurar Contexto de la DB and niveles de loggin*/
 builder.Services.AddDbContext<AppDbContext>(
     options =>
     {
@@ -74,25 +71,19 @@ builder.Services.AddDbContext<AppDbContext>(
                     .LogTo(Console.WriteLine, LogLevel.Information)
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors();
-
             }
-
             else if (builder.Environment.IsProduction())
             {
                 System.Console.WriteLine($"ConnectionString: {connectionString}");
                 options.UseMySQL(connectionString)
                     .LogTo(Console.WriteLine, LogLevel.Error)
                     .EnableDetailedErrors();
-                
             }
-                
     }
 );
 
-
 // Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     c =>
@@ -159,7 +150,7 @@ builder.Services.AddScoped<IFoodQueryService, FoodQueryService>();
 //----------------MedicalHistory BoundedContext---------------------
 builder.Services.AddScoped<IVaccineRepository, VaccineRepository>();
 builder.Services.AddScoped<IVaccineCommandService, VaccineCommandService>();
-builder.Services.AddScoped<IVaccineQueryService,VaccineQueryService>();
+builder.Services.AddScoped<IVaccineQueryService, VaccineQueryService>();
 
 builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
 builder.Services.AddScoped<IMedicationCommandService, MedicationCommandService>();
@@ -173,24 +164,24 @@ builder.Services.AddScoped<ITreatmentRepository, TreatmentRepository>();
 builder.Services.AddScoped<ITreatmentCommandService, TreatmentCommandService>();
 builder.Services.AddScoped<ITreatmentQueryService, TreatmentQueryService>();
 
-builder.Services.AddScoped<IDiseaseRepository,DiseaseRepository>();
-builder.Services.AddScoped<IDiseaseCommandService,DiseaseCommandService>();
-builder.Services.AddScoped<IDiseaseQueryService,DiseaseQueryService>();
+builder.Services.AddScoped<IDiseaseRepository, DiseaseRepository>();
+builder.Services.AddScoped<IDiseaseCommandService, DiseaseCommandService>();
+builder.Services.AddScoped<IDiseaseQueryService, DiseaseQueryService>();
 
-builder.Services.AddScoped<IDiseaseDiagnosisRepository,DiseaseDiagnosisRepository>();
-builder.Services.AddScoped<IDiseaseDiagnosisCommandService,DiseaseDiagnosisCommandService>();
-builder.Services.AddScoped<IDiseaseDiagnosisQueryService,DiseaseDiagnosisQueryService>();
+builder.Services.AddScoped<IDiseaseDiagnosisRepository, DiseaseDiagnosisRepository>();
+builder.Services.AddScoped<IDiseaseDiagnosisCommandService, DiseaseDiagnosisCommandService>();
+builder.Services.AddScoped<IDiseaseDiagnosisQueryService, DiseaseDiagnosisQueryService>();
 
 //----------------Profile BoundedContext---------------------
-builder.Services.AddScoped<IProfileRepository,ProfileRepository>();
-builder.Services.AddScoped<IProfileCommandService,ProfileCommandService>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<IProfileCommandService, ProfileCommandService>();
 builder.Services.AddScoped<IProfileQueryService, ProfileQueryService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //----------------Notification BoundedContext---------------------
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-builder.Services.AddScoped<INotificationCommandService,NotificationCommandService>();
+builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
 builder.Services.AddScoped<INotificationQuerieService, NotificationQueryService>();
 
 //----------------External Services BoundedContext---------------------
@@ -206,11 +197,8 @@ builder.Services.AddScoped<ExternalNotificationService>();
 builder.Services.AddScoped<IProfileContextFacade, ProfileContextFacade>();
 builder.Services.AddScoped<ExternalProfileService>();
 
-
 // IAM Bounded Context Injection Configuration
-
 // TokenSettings Configuration
-
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -220,60 +208,39 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 
-/* Add CORS Policy*/
+/* Add CORS Policy - CONFIGURACIÓN CORREGIDA */
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllPolicy",
-        policy =>
-        {
-            // Permite cualquier origen de localhost (independientemente del puerto)
-            policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            
-            // Si también tienes un frontend ya desplegado en una URL pública,
-            // puedes añadirlo aquí también
-            // .WithOrigins("http://tu-dominio-publico.com") 
-        });
+        policy => policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
-
 
 var app = builder.Build();
 
 /* Verify Database Objects are created y migracion de */
 using (var scope = app.Services.CreateScope())
 {
-    
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
-    
 }
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    
 }
 
-/*
- Important: UseRouting must be called before UseCors/UseAuthorization when using endpoint routing.
- Add UseRouting() early in the pipeline.
-*/
-app.UseRouting();
-
+// ========== IMPORTANTE: CORS DEBE IR PRIMERO ==========
 app.UseCors("AllowAllPolicy");
 
-app.UseCors("AllowAllPolicy");
+app.UseHttpsRedirection();
 
 // Add Authorization Middleware to Pipeline
 app.UseRequestAuthorization();
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
