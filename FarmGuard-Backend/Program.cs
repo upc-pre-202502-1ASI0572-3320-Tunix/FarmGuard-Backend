@@ -208,13 +208,20 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 
-/* Add CORS Policy - CONFIGURACIÓN CORREGIDA */
+/* Add CORS Policy - ESPECÍFICO PARA TUS PUERTOS */
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllPolicy",
-        policy => policy.AllowAnyOrigin()
+        policy => policy.WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:61721",
+                "http://127.0.0.1:3000",
+                "http://127.0.0.1:61721"
+            )
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true)); // Permite cualquier localhost
 });
 
 var app = builder.Build();
@@ -234,7 +241,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
-// ========== IMPORTANTE: CORS DEBE IR PRIMERO ==========
+// ========== CRÍTICO: CORS DEBE IR ANTES DE TODO ==========
 app.UseCors("AllowAllPolicy");
 
 app.UseHttpsRedirection();
