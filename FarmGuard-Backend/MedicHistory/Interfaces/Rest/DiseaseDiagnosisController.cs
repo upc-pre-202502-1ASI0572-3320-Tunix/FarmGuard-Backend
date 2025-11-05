@@ -9,19 +9,61 @@ namespace FarmGuard_Backend.MedicHistory.Interfaces.Rest;
 
 [ApiController]
 [Route("api/v1/diseasediagnosis")]
-public class DiseaseDiagnosisController(IDiseaseDiagnosisCommandService commandService, IDiseaseDiagnosisQueryService queryService) : ControllerBase
+public class DiseaseDiagnosisController(
+    IDiseaseDiagnosisCommandService commandService, 
+    IDiseaseDiagnosisQueryService queryService,
+    ILogger<DiseaseDiagnosisController> logger) : ControllerBase
 {
     [HttpPost("{medicalHistoryId}")]
-    public async Task<IActionResult> Add([FromBody] CreateDiseaseDiagnosisResource resource,int medicalHistoryId)
+    public async Task<IActionResult> Add([FromBody] CreateDiseaseDiagnosisResource resource, int medicalHistoryId)
     {
-        var command = new CreateDiseaseDiagnosisCommand(
-            resource.Severity,
-            resource.Notes,
-            resource.DiagnosedAt,
-            medicalHistoryId
-        );
-        var result = await commandService.Handle(command);
-        return Ok(result);
+        try
+        {
+            // Log para debugging
+            logger.LogInformation("POST DiseaseDiagnosis - MedicalHistoryId: {MedicalHistoryId}, Severity: {Severity}, Notes: {Notes}, DiagnosedAt: {DiagnosedAt}", 
+                medicalHistoryId, resource?.Severity, resource?.Notes, resource?.DiagnosedAt);
+
+            // Validaciones
+            if (resource == null)
+            {
+                logger.LogWarning("Resource is null");
+                return BadRequest(new { error = "El cuerpo de la solicitud es requerido" });
+            }
+
+            if (medicalHistoryId <= 0)
+            {
+                logger.LogWarning("Invalid medicalHistoryId: {MedicalHistoryId}", medicalHistoryId);
+                return BadRequest(new { error = "El medicalHistoryId debe ser mayor a 0" });
+            }
+
+            if (string.IsNullOrWhiteSpace(resource.Severity))
+            {
+                logger.LogWarning("Severity is null or empty");
+                return BadRequest(new { error = "Severity es requerido" });
+            }
+
+            if (string.IsNullOrWhiteSpace(resource.Notes))
+            {
+                logger.LogWarning("Notes is null or empty");
+                return BadRequest(new { error = "Notes es requerido" });
+            }
+
+            var command = new CreateDiseaseDiagnosisCommand(
+                resource.Severity,
+                resource.Notes,
+                resource.DiagnosedAt,
+                medicalHistoryId
+            );
+            
+            var result = await commandService.Handle(command);
+            logger.LogInformation("DiseaseDiagnosis created successfully with ID: {Id}", result);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error creating DiseaseDiagnosis for MedicalHistoryId: {MedicalHistoryId}", medicalHistoryId);
+            return StatusCode(500, new { error = "Error interno del servidor", details = ex.Message });
+        }
     }
 
     [HttpGet("{id}")]
@@ -46,7 +88,3 @@ public class DiseaseDiagnosisController(IDiseaseDiagnosisCommandService commandS
         return Ok(result);
     }
 }
-
-
-
-

@@ -64,7 +64,23 @@ public class UserCommandService(
             await userRepository.AddAsync(user);
             await unitOfWork.CompleteAsync();
             
-            var urlPhoto = await storageService.SaveFile(command.Photo,$"{user.Id}" ,"profiles");
+            string urlPhoto;
+            try
+            {
+                if (command.Photo != null)
+                {
+                    urlPhoto = await storageService.SaveFile(command.Photo,$"{user.Id}" ,"profiles");
+                }
+                else
+                {
+                    urlPhoto = "https://firebasestorage.googleapis.com/v0/b/farmguard-993d2.firebasestorage.app/o/profiles%2Fdefault.jpg?alt=media";
+                }
+            }
+            catch (Exception photoEx)
+            {
+                Console.WriteLine($"Warning: Could not upload photo to Firebase: {photoEx.Message}. Using default photo.");
+                urlPhoto = "https://firebasestorage.googleapis.com/v0/b/farmguard-993d2.firebasestorage.app/o/profiles%2Fdefault.jpg?alt=media";
+            }
         
             var profileId = await externalProfileService.CreateProfileWithUser(command.FirstName, command.LastName,
                 command.Email, urlPhoto,user.Id );
