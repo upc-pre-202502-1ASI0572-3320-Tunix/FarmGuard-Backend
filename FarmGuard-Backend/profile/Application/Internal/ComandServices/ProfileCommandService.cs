@@ -147,6 +147,8 @@ public class ProfileCommandService(
             
             profile.UpdateEmail(command.Email);
             profile.UpdateUrlPhoto(urlPhoto);
+            
+            profile.UpdateName(command.FirstName,command.LastName);
         
             profileRepository.Update(profile);
             await unitOfWork.CompleteAsync();
