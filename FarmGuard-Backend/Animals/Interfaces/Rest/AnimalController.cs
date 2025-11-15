@@ -3,15 +3,16 @@ using FarmGuard_Backend.Animals.Domain.Model.Queries;
 using FarmGuard_Backend.Animals.Domain.Services;
 using FarmGuard_Backend.Animals.Interfaces.Rest.resources;
 using FarmGuard_Backend.Animals.Interfaces.Rest.Transform;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace FarmGuard_Backend.Animals.Interfaces.Rest;
 
 [ApiController]
 [Route("api/v1/animals")]
-public class AnimalController(IAnimalCommandService animalCommandService, IAnimalQueryService animalQueryService):ControllerBase
+public class AnimalController(
+    IAnimalCommandService animalCommandService, 
+    IAnimalQueryService animalQueryService,
+    ILogger<AnimalController> logger):ControllerBase
 {
     [HttpPost("{idInventory}")]
     [RequestFormLimits(MultipartBodyLengthLimit = 5_000_000)]
@@ -19,19 +20,36 @@ public class AnimalController(IAnimalCommandService animalCommandService, IAnima
     {
         try
         {
-            var createAnimalCommand = CreateAnimalCommandFromResourceAssembler.ToCommandFromResource(resource,idInventory);
+            logger.LogInformation("=== CREATE ANIMAL REQUEST ===");
+            logger.LogInformation("IdInventory: {IdInventory}", idInventory);
+            logger.LogInformation("Name: {Name}", resource.Name);
+            logger.LogInformation("Specie: {Specie}", resource.Specie);
+            logger.LogInformation("UrlIot: {UrlIot}", resource.UrlIot);
+            logger.LogInformation("Location: {Location}", resource.Location);
+            logger.LogInformation("HearRate: {HearRate}", resource.HearRate);
+            logger.LogInformation("Temperature: {Temperature}", resource.Temperature);
+            logger.LogInformation("Sex: {Sex}", resource.Sex);
+            logger.LogInformation("BirthDate: {BirthDate}", resource.BirthDate);
+            logger.LogInformation("File: {HasFile}", resource.File != null ? "Yes" : "No");
+            
+            var createAnimalCommand = CreateAnimalCommandFromResourceAssembler.ToCommandFromResource(resource, idInventory);
             var animal = await animalCommandService.Handle(createAnimalCommand);
             
-            if (animal == null) return BadRequest();
+            if (animal == null)
+            {
+                logger.LogWarning("Animal creation returned null");
+                return BadRequest(new { message = "Failed to create animal" });
+            }
 
             var resourceResult = AnimalResourceFromEntityAssembler.ToResourceFromEntity(animal);
+            logger.LogInformation("Animal created successfully with ID: {AnimalId}", animal.Id);
             return Ok(resourceResult);
-
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return BadRequest(new {message = "An error has occured!" + e.Message });
+            logger.LogError(e, "Error creating animal: {Message}", e.Message);
+            logger.LogError("Stack trace: {StackTrace}", e.StackTrace);
+            return BadRequest(new { message = "An error has occurred: " + e.Message, stackTrace = e.StackTrace });
         }
     }
 
@@ -91,4 +109,3 @@ public class AnimalController(IAnimalCommandService animalCommandService, IAnima
     }
 
 }
-

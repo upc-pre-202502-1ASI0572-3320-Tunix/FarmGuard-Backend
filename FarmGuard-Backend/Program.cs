@@ -49,12 +49,51 @@ using FarmGuard_Backend.Shared.Infrastructure.Persistance.EFC.Repositories;
 using FarmGuard_Backend.Shared.Interfaces.ASP.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 /*Configuracion LowerCaseUrl*/
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
-builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
+builder.Services.AddControllers(options => 
+{
+    options.Conventions.Add(new KebabCaseRouteNamingConvention());
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    // Personalizar la respuesta de errores de validación
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+        
+        // Loguear todos los errores de validación
+        logger.LogWarning("Validación de modelo falló. Errores:");
+        foreach (var modelState in context.ModelState)
+        {
+            foreach (var error in modelState.Value.Errors)
+            {
+                logger.LogWarning("Campo: {Field}, Error: {Error}", 
+                    modelState.Key, 
+                    error.ErrorMessage ?? error.Exception?.Message);
+            }
+        }
+        
+        var errors = context.ModelState
+            .Where(e => e.Value.Errors.Count > 0)
+            .Select(e => new
+            {
+                Field = e.Key,
+                Errors = e.Value.Errors.Select(x => x.ErrorMessage ?? x.Exception?.Message).ToArray()
+            })
+            .ToList();
+
+        return new BadRequestObjectResult(new
+        {
+            Message = "Error de validación",
+            Errors = errors
+        });
+    };
+});
 
 /*Añadir Conexion DB*/
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -215,13 +254,14 @@ builder.Services.AddCors(options =>
         policy => policy.WithOrigins(
                 "http://localhost:3000",
                 "http://localhost:61721",
+                "http://localhost:57042",
                 "http://127.0.0.1:3000",
                 "http://127.0.0.1:61721"
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
-            .SetIsOriginAllowed(_ => true)); // Permite cualquier localhost
+            .SetIsOriginAllowed(_ => true)); 
 });
 
 var app = builder.Build();
@@ -243,6 +283,26 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 // ========== CRÍTICO: CORS DEBE IR ANTES DE TODO ==========
 app.UseCors("AllowAllPolicy");
+
+// Middleware temporal para debugging - captura el body de las peticiones
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == "POST" && context.Request.Path.StartsWithSegments("/api/v1/diseasediagnosis"))
+    {
+        context.Request.EnableBuffering();
+        using var reader = new StreamReader(context.Request.Body, leaveOpen: true);
+        var body = await reader.ReadToEndAsync();
+        context.Request.Body.Position = 0;
+        
+        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning("=== DEBUG REQUEST ===");
+        logger.LogWarning("Path: {Path}", context.Request.Path);
+        logger.LogWarning("Content-Type: {ContentType}", context.Request.ContentType);
+        logger.LogWarning("Body RAW: {Body}", body);
+        logger.LogWarning("===================");
+    }
+    await next();
+});
 
 app.UseHttpsRedirection();
 
