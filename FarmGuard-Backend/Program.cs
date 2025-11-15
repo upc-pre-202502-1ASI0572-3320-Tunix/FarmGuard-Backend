@@ -256,7 +256,8 @@ builder.Services.AddCors(options =>
                 "http://localhost:61721",
                 "http://localhost:57042",
                 "http://127.0.0.1:3000",
-                "http://127.0.0.1:61721"
+                "http://127.0.0.1:61721",
+                "https://calm-forest-08b0d0210.3.azurestaticapps.net/"
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
