@@ -7,6 +7,7 @@ using FarmGuard_Backend.Animals.Domain.Services;
 using FarmGuard_Backend.Animals.Infrastructure.Persistence.EFC.Repositories;
 using FarmGuard_Backend.Animals.Interfaces.Acl;
 using FarmGuard_Backend.Animals.Interfaces.Acl.Services;
+using FarmGuard_Backend.Animals.Interfaces.Hubs;
 using FarmGuard_Backend.IAM.Application.Internal.CommandServices;
 using FarmGuard_Backend.IAM.Application.Internal.OutboundServices;
 using FarmGuard_Backend.IAM.Application.Internal.QueryServices;
@@ -52,6 +53,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Añadimos la comunicacion con SignalR (para el monitoreo animal)
+builder.Services.AddSignalR();
 
 /*Configuracion LowerCaseUrl*/
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -313,5 +317,7 @@ app.UseRequestAuthorization();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<TelemetryHub>("/hubs/telemetry");
 
 app.Run();

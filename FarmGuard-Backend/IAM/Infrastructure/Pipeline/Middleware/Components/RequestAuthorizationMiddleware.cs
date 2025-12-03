@@ -35,6 +35,15 @@ public class RequestAuthorizationMiddleware(RequestDelegate next)
             return;
         }
 
+        // Skip authorization for excluded paths
+        var excludedPaths = new[] { "/hubs/telemetry" };
+        if (excludedPaths.Any(p => context.Request.Path.StartsWithSegments(p)))
+        {
+            Console.WriteLine($"Path {context.Request.Path} is excluded from authorization");
+            await next(context);
+            return;
+        }
+
         // skip authorization if endpoint is decorated with [AllowAnonymous] attribute
         var endpoint = context.Request.HttpContext.GetEndpoint();
         if (endpoint != null)
